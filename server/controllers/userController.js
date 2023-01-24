@@ -16,17 +16,26 @@ exports.home = (req, res) => {
 }
 // View Users
 exports.view = (req, res) => {
-  // User the connection
-  connection.query('SELECT * FROM user WHERE status = "active"', (err, rows) => {
-    // When done with the connection, release it
-    if (!err) {
-      let removedUser = req.query.removed;
-      res.render('sus', { rows, removedUser });
+
+    // If the user is loggedin
+    if (req.session.loggedin) {
+      
+      // User the connection
+      connection.query('SELECT * FROM user WHERE status = "active"', (err, rows) => {
+        // When done with the connection, release it
+        if (!err) {
+          let removedUser = req.query.removed;
+          let username = req.session.username;
+          res.render('sus', { rows, removedUser, username });
+        } else {
+          console.log(err);
+        }
+        //console.log('The data from user table: \n', rows);
+      });
     } else {
-      console.log(err);
+      // Not logged in
+      res.send('Please login to view this page!');
     }
-    console.log('The data from user table: \n', rows);
-  });
 }
 
 // Find User by Search
@@ -161,7 +170,7 @@ exports.sheets = (req, res) => {
     } else {
       console.log(err);
     }
-    console.log('The data from sheets table: \n', rows);
+    //console.log('The data from sheets table: \n', rows);
   });
 }
 
