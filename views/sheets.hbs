@@ -1,0 +1,34 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+  </ol>
+</nav>
+<div class="row">
+  <div class="col-6">
+    <h1>Meine Übungsblätter</h1>
+  </div>
+ 
+</div>
+
+<table class="table table-bordered">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Beschreibung</th>
+      <th scope="col">Punkte</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {{#each rows}}
+    <tr>
+      <th scope="row">{{this.sheet_id}}</th>
+      <td>{{this.name}}</td>
+      <td>{{this.description}}</td>
+      <td>{{this.points}}</td>
+    </tr>
+    {{/each}}
+
+  </tbody>
+</table>
