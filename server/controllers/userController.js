@@ -8,17 +8,17 @@ let connection = mysql.createConnection({
   database: process.env.DB_NAME
 });
 
-// Start page
+// Start page - not in use
 exports.home = (req, res) => {
 
   res.render('home', { });
 
 }
-// View Users
+// View Users -- only for teachers to show all the students and their progress
 exports.view = (req, res) => {
 
     // If the user is loggedin
-    if (req.session.loggedin) {
+    if (req.session.loggedin && req.session.admin) {
       
       // User the connection
       connection.query('SELECT * FROM user WHERE status = "active"', (err, rows) => {
@@ -33,8 +33,9 @@ exports.view = (req, res) => {
         //console.log('The data from user table: \n', rows);
       });
     } else {
-      // Not logged in
-      res.send('Please login to view this page!');
+      // Not logged in: please log in to view this page .....
+      res.render('login', {layout: 'loginLayout.hbs'});
+      //res.send('Please login to view this page!');
     }
 }
 
@@ -143,7 +144,7 @@ exports.delete = (req, res) => {
 
 }
 
-// View Users
+// view only one user
 exports.viewall = (req, res) => {
 
   // User the connection
@@ -160,18 +161,30 @@ exports.viewall = (req, res) => {
 
 
 
-// Show sheets
+// show my sheets --> for students here all their sheets are displayed
 exports.sheets = (req, res) => {
-  connection.query('SELECT * FROM sheets', (err, rows) => {
-    // When done with the connection, release it
-    if (!err) {
-      //let removedUser = req.query.removed;
-      res.render('sheets', { rows });
-    } else {
-      console.log(err);
-    }
-    //console.log('The data from sheets table: \n', rows);
-  });
+
+   // If the user is loggedin
+   if (req.session.loggedin) {
+      
+    //connection.query('SELECT * FROM sheets WHERE username = ?', [req.session.username], (err, rows) => {
+    connection.query('SELECT * FROM sheets s, results r, user u WHERE s.sheet_id = r.sheet_id AND r.user_id = u.id AND u.first_name = ?', [req.session.username], (err, rows) => {
+
+      // When done with the connection, release it
+      if (!err) {
+        //let removedUser = req.query.removed;
+        res.render('sheets', { rows });
+      } else {
+        console.log(err);
+      }
+    console.log('The data output from table: \n', rows);
+    });
+  } else {
+    // Not logged in: please log in to view this page .....
+    res.render('login', {layout: 'loginLayout.hbs'});
+    //res.send('Please login to view this page!');
+  }
+  
 }
 
 
@@ -180,14 +193,12 @@ exports.sheets = (req, res) => {
 
 // Login
 exports.login = (req, res) => {
-
   res.render('login', {layout: 'loginLayout.hbs'});
 }
 
 
-
-
 exports.auth = (req, res) => {
+
   // Capture the input fields
 	let username = req.body.username;
 	let password = req.body.password;
@@ -197,7 +208,7 @@ exports.auth = (req, res) => {
 		console.log("Username is: " + username);
 
 		// Execute SQL query that'll select the account from the database based on the specified username and password
-		connection.query('SELECT * FROM user WHERE first_name = ? AND last_name = ?', [username, password], function(error, results, fields) {
+		connection.query('SELECT * FROM user WHERE first_name = ? AND password = ?', [username, password], function(error, results, fields) {
 			// If there is an issue with the query, output the error
 			if (error) throw error;
 			// If the account exists
@@ -205,6 +216,9 @@ exports.auth = (req, res) => {
 				// Authenticate the user
 				req.session.loggedin = true;
 				req.session.username = username;
+        req.session.admin = (results[0].role == 'teacher') ? true : false;
+        console.log("The user " + req.session.username + " has the role " +  results[0].role + " which equals admin = " + req.session.admin);
+
 				// Redirect to home page
 				res.redirect('/sheets');
 			} else {
