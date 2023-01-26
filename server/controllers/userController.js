@@ -229,5 +229,15 @@ exports.auth = (req, res) => {
 	} else {
 		res.send('Please enter Username and Password!');
 		res.end();
+  }
 }
+
+// Logout
+exports.logout = (req, res) => {
+
+  console.log("Test");
+  req.session.destroy();
+
+  res.render('login', {layout: 'loginLayout.hbs'});
+
 }
