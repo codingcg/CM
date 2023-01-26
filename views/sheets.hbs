@@ -24,7 +24,7 @@
     {{#each rows}}
     <tr>
       <th scope="row">{{this.sheet_id}}</th>
-      <td>{{this.name}}</td>
+      <td><a href="/{{this.name}}">{{this.name}}</a></td>
       <td>{{this.description}}</td>
       <td>{{this.points}}</td>
     </tr>

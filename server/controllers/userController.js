@@ -168,7 +168,7 @@ exports.sheets = (req, res) => {
    if (req.session.loggedin) {
       
     //connection.query('SELECT * FROM sheets WHERE username = ?', [req.session.username], (err, rows) => {
-    connection.query('SELECT * FROM sheets s, results r, user u WHERE s.sheet_id = r.sheet_id AND r.user_id = u.id AND u.first_name = ?', [req.session.username], (err, rows) => {
+    connection.query('SELECT * FROM sheets s, results r, user u WHERE s.sheet_id = r.sheet_id AND r.username = u.username AND u.username = ?', [req.session.username], (err, rows) => {
 
       // When done with the connection, release it
       if (!err) {
@@ -241,3 +241,34 @@ exports.logout = (req, res) => {
   res.render('login', {layout: 'loginLayout.hbs'});
 
 }
+
+
+
+exports.a1 = (req, res) => {
+  let a1 = req.body.a1;
+
+	if (a1) {
+    connection.query('SELECT * FROM sheets WHERE sheet_id = ?', 1, function(error, results, fields) {
+
+        let p = (results[0].lsg1 == a1)? results[0].p1: 0;
+        connection.query('UPDATE results SET ans1 = ?, p1 = ? WHERE sheet_id = ? AND username = ?', [a1, p, 1, req.session.username]);
+   
+      });		
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
