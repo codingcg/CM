@@ -83,7 +83,7 @@ exports.edit = (req, res) => {
     } else {
       console.log(err);
     }
-    console.log('The data from user table: \n', rows);
+    //console.log('The data from user table: \n', rows);
   });
 }
 
@@ -104,7 +104,7 @@ exports.update = (req, res) => {
         } else {
           console.log(err);
         }
-        console.log('The data from user table: \n', rows);
+        //console.log('The data from user table: \n', rows);
       });
     } else {
       console.log(err);
@@ -139,7 +139,7 @@ exports.delete = (req, res) => {
     } else {
       console.log(err);
     }
-    console.log('The data from beer table are: \n', rows);
+    //console.log('The data from beer table are: \n', rows);
   });
 
 }
@@ -154,7 +154,7 @@ exports.viewall = (req, res) => {
     } else {
       console.log(err);
     }
-    console.log('The data from user table: \n', rows);
+    //console.log('The data from user table: \n', rows);
   });
 
 }
@@ -177,7 +177,7 @@ exports.sheets = (req, res) => {
       } else {
         console.log(err);
       }
-    console.log('The data output from table: \n', rows);
+    //console.log('The data output from table: \n', rows);
     });
   } else {
     // Not logged in: please log in to view this page .....
@@ -205,7 +205,7 @@ exports.auth = (req, res) => {
   
 	// Ensure the input fields exists and are not empty
 	if (username && password) {
-		console.log("Username is: " + username);
+		//console.log("Username is: " + username);
 
 		// Execute SQL query that'll select the account from the database based on the specified username and password
 		connection.query('SELECT * FROM user WHERE first_name = ? AND password = ?', [username, password], function(error, results, fields) {
@@ -217,7 +217,7 @@ exports.auth = (req, res) => {
 				req.session.loggedin = true;
 				req.session.username = username;
         req.session.admin = (results[0].role == 'teacher') ? true : false;
-        console.log("The user " + req.session.username + " has the role " +  results[0].role + " which equals admin = " + req.session.admin);
+        //console.log("The user " + req.session.username + " has the role " +  results[0].role + " which equals admin = " + req.session.admin);
 
 				// Redirect to home page
 				res.redirect('/sheets');
@@ -234,28 +234,57 @@ exports.auth = (req, res) => {
 
 // Logout
 exports.logout = (req, res) => {
-
-  console.log("Test");
   req.session.destroy();
-
   res.render('login', {layout: 'loginLayout.hbs'});
-
 }
 
 
+// display one sheet, for example Bruch_T1
+exports.displayOneSheet = (req, res) => {  
+  if (req.session.loggedin) {
 
-exports.a1 = (req, res) => {
-  let a1 = req.body.a1;
+    connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], (err, results) => {
 
-	if (a1) {
-    connection.query('SELECT * FROM sheets WHERE sheet_id = ?', 1, function(error, results, fields) {
+      res.render(results[0].subject + '/' + results[0].name);
+    });
+ } else {
+   // Not logged in: please log in to view this page .....
+   res.render('login', {layout: 'loginLayout.hbs'});
+ }
+}
 
-        let p = (results[0].lsg1 == a1)? results[0].p1: 0;
-        connection.query('UPDATE results SET ans1 = ?, p1 = ? WHERE sheet_id = ? AND username = ?', [a1, p, 1, req.session.username]);
-   
-      });		
+
+// store answer is called every time the user clicks Prüfen 
+//--> it stores the result in the database,  calculates the points for the exercise as well as stores the points 
+// and returns the points to the frontend
+exports.storeAnswer = (req, res) => {
+  let numberOfExercise = req.params.numberOfExercise
+  let answerGiven = req.body['a' + numberOfExercise];
+
+  console.log(numberOfExercise);
+
+  // continue only if the user entered a float number which is in correct format
+  if(/^\d{1,2}(\.\d{0,2})?$|^\.\d\d?$/.test(answerGiven)) {
+
+      if (answerGiven) {
+        connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], function(error, results, fields) {
+
+            let correctSolution = results[0]['lsg' + numberOfExercise];
+            let pointsForThisExercise = (correctSolution == answerGiven)? results[0]['p' + numberOfExercise]: 0;
+            connection.query('UPDATE results SET ans'+numberOfExercise+' = ?, p'+numberOfExercise+' = ? WHERE sheet_id = ? AND username = ?', [answerGiven, pointsForThisExercise, req.params.sheet_id, req.session.username]);
+        
+            console.log(correctSolution);
+            res.render(results[0].subject + '/' + results[0].name, {correctSolution});
+            //res.json(correctSolution);
+
+        });		
+      }
+  } else {
+    res.send("Falsches Format");
   }
+
 }
+
 
 
 

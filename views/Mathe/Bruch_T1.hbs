@@ -1,17 +1,19 @@
 
-<form action="/a1/" method="post">
+<form action="/storeAnswer/1/1" method="post">
     <p><label><b>Berechne 0,5 + 0,25 </b></label></p>
-    <p><input type="text" name="a1" id="a1" class="exerciseInput">   &emsp;
+    <p><input type="text" name="a1" id="a1">   &emsp;
         <span role="alert" id="c1" style="display: none"></span>
     </p>
-    <p><button onclick="validate(1)" class="btn btn-light checkBtn">Prüfen</button></p>
+    <p><button onclick="validateAnswer(1)" class="btn btn-light checkBtn">Prüfen</button></p>
 </form>
 
 <hr>
-<form action="/a2/" method="post">
+<form action="/storeAnswer/2/1" method="post">
     <p><label><b>Berechne 5,1 - 3,5</b> </label></p>
-    <p><input type="text" name="a2" class="exerciseInput"></p>
-    <p><button class="btn btn-light checkBtn">Prüfen</button></p>
+    <p><input type="text" name="a2" id="a2">   &emsp;
+        <span role="alert" id="c2" style="display: none"></span>
+    </p>
+    <p><button onclick="validateAnswer(2)" class="btn btn-light checkBtn">Prüfen</button></p>
 </form>
 
 <hr>
@@ -30,7 +32,6 @@
     <p><button class="btn btn-light checkBtn">Prüfen</button></p>
 </form>
 <hr>
-<span id="breakLine"></span>
 
 <br>
 <a href="#">Zum nächsten Arbeitsblatt</a>
@@ -131,20 +132,17 @@ Name: <input id="nameId" type="text" value="..."><br><br>
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
 
-    function validate(num) {
+    
+    function validateAnswer(num) {
 
         const input = document.getElementById("a" + num);
 
-        if (input.value == 0.75) {
+        if (input.value == {{correctSolution}}) {
             input.style.border = "3px solid green";
             input.style.color = "green";
 
-            return 1;
-
         } else {
-        console.log("validate");
-            var correction = document.getElementById("c1");
-            var breakLine = document.getElementById("breakLine");
+            var correction = document.getElementById("c" + num);
 
             input.style.border = "3px solid red";
             input.style.color = "red";
@@ -152,23 +150,9 @@ Name: <input id="nameId" type="text" value="..."><br><br>
 
             correction.style.display = "inline-block";
             correction.style.color = "grey";
+            correction.innerHTML = {{correctSolution}};
 
-            correction.innerHTML += "0,75";
-
-            breakLine.innerHTML += 0.75;
-
-            return 0;
         }
-
-          return JSON.stringify(context);
     }
 
-    /*var myName;
-    var myTemplate = $('#myTempId').html();
-    var compiled = Handlebars.compile(myTemplate);
-
-    $('#buttonId').click(function(){
-    myName = $('#nameId').val();
-    $('#containerId').html(compiled({name:myName}));
-    });*/
 </script>

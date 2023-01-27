@@ -20,12 +20,11 @@ router.post('/logout', userController.logout);
 
 
 // Render SHEETS 
-router.get('/Bruch_T1', (req, res) => res.render('math_sheets/Bruch_T1'));
-
-
+//router.get('/Bruch_T1', (req, res) => res.render('math_sheets/Bruch_T1'));
+router.get('/displayOneSheet/:sheet_id', userController.displayOneSheet);
 
 // store sheet results in db
-router.post('/a1', userController.a1);
+router.post('/storeAnswer/:numberOfExercise/:sheet_id', userController.storeAnswer);
 
 
 
