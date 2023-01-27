@@ -17,6 +17,8 @@ router.post('/auth', userController.auth);
 router.post('/logout', userController.logout);
 
 
+
+
 // Render SHEETS 
 router.get('/Bruch_T1', (req, res) => res.render('math_sheets/Bruch_T1'));
 
@@ -28,5 +30,8 @@ router.post('/a1', userController.a1);
 
 
 router.get('/:id',userController.delete);
+
+
+
 
 module.exports = router;

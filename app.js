@@ -36,7 +36,12 @@ app.use(express.static('public'));
 
 // Templating Engine
 const handlebars = exphbs.create({ extname: '.hbs', });
-app.engine('.hbs', handlebars.engine);
+
+
+//when configuring the app view engine
+app.engine('.hbs', exphbs.engine({
+  extname: '.hbs',
+}));
 app.set('view engine', '.hbs');
 
 

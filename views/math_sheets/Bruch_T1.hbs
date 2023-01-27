@@ -1,10 +1,10 @@
 
 <form action="/a1/" method="post">
     <p><label><b>Berechne 0,5 + 0,25 </b></label></p>
-    <p><input type="text" name="a1" class="exerciseInput">   &emsp;
+    <p><input type="text" name="a1" id="a1" class="exerciseInput">   &emsp;
         <span role="alert" id="c1" style="display: none"></span>
     </p>
-    <p><button class="btn btn-light checkBtn">Prüfen</button></p>
+    <p><button onclick="validate(1)" class="btn btn-light checkBtn">Prüfen</button></p>
 </form>
 
 <hr>
@@ -121,3 +121,54 @@
     </table>
 
 </div>
+
+Name: <input id="nameId" type="text" value="..."><br><br>
+<input id="buttonId" onclick="test()" type="submit"><br><br>
+
+<div id="containerId"><div>
+
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript">
+
+    function validate(num) {
+
+        const input = document.getElementById("a" + num);
+
+        if (input.value == 0.75) {
+            input.style.border = "3px solid green";
+            input.style.color = "green";
+
+            return 1;
+
+        } else {
+        console.log("validate");
+            var correction = document.getElementById("c1");
+            var breakLine = document.getElementById("breakLine");
+
+            input.style.border = "3px solid red";
+            input.style.color = "red";
+            input.style.textDecoration = "line-through";
+
+            correction.style.display = "inline-block";
+            correction.style.color = "grey";
+
+            correction.innerHTML += "0,75";
+
+            breakLine.innerHTML += 0.75;
+
+            return 0;
+        }
+
+          return JSON.stringify(context);
+    }
+
+    /*var myName;
+    var myTemplate = $('#myTempId').html();
+    var compiled = Handlebars.compile(myTemplate);
+
+    $('#buttonId').click(function(){
+    myName = $('#nameId').val();
+    $('#containerId').html(compiled({name:myName}));
+    });*/
+</script>
