@@ -26,8 +26,6 @@ router.get('/displayOneSheet/:sheet_id', userController.displayOneSheet);
 // store sheet results in db
 router.post('/storeAnswer/:numberOfExercise/:sheet_id', userController.storeAnswer);
 
-
-
 router.get('/:id',userController.delete);
 
 

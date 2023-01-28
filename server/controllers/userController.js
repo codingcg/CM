@@ -273,9 +273,7 @@ exports.storeAnswer = (req, res) => {
             let pointsForThisExercise = (correctSolution == answerGiven)? results[0]['p' + numberOfExercise]: 0;
             connection.query('UPDATE results SET ans'+numberOfExercise+' = ?, p'+numberOfExercise+' = ? WHERE sheet_id = ? AND username = ?', [answerGiven, pointsForThisExercise, req.params.sheet_id, req.session.username]);
         
-            console.log(correctSolution);
-            res.render(results[0].subject + '/' + results[0].name, {correctSolution});
-            //res.json(correctSolution);
+            res.render(results[0].subject + '/' + results[0].name, {numberOfExercise, answerGiven, correctSolution});
 
         });		
       }
@@ -284,6 +282,10 @@ exports.storeAnswer = (req, res) => {
   }
 
 }
+exports.anotherRoute = (req, res, next) => {
+  // In this route I don't need to intercept the response, so I just do it like normal.
+  return res.send({ message:'Feels good, man.' });
+};
 
 
 

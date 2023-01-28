@@ -1,6 +1,5 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
-//const bodyParser = require('body-parser'); // No longer Required
 const session = require('express-session');
 
 require('dotenv').config();
@@ -12,38 +11,22 @@ app.use(session({
 	secret: 'secret',
 	resave: true,
 	saveUninitialized: true
-	/*cookie: {
-		secure: true,
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24,
-    }*/
 }));
 
-
-
-
-// Parsing middleware
-// Parse application/x-www-form-urlencoded
-// app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.urlencoded({ extended: true })); // New
-
-// Parse application/json
-// app.use(bodyParser.json());
-app.use(express.json()); // New
+app.use(express.urlencoded({ extended: true })); 
+app.use(express.json()); 
 
 // Static Files
-app.use(express.static('public'));
+app.use(express.static('/public'));
 
 // Templating Engine
 const handlebars = exphbs.create({ extname: '.hbs', });
-
 
 //when configuring the app view engine
 app.engine('.hbs', exphbs.engine({
   extname: '.hbs',
 }));
 app.set('view engine', '.hbs');
-
 
 const userRoutes = require('./server/routes/user');
 app.use('/', userRoutes);

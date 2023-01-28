@@ -1,10 +1,18 @@
-
+<table>
+    <tr>
+        <td id="first"> </td>
+        <td id="one"> </td>
+        <td id="two"> </td>
+        <td id="last"> </td>
+    </tr>
+</table>
+<br><br>
 <form action="/storeAnswer/1/1" method="post">
     <p><label><b>Berechne 0,5 + 0,25 </b></label></p>
     <p><input type="text" name="a1" id="a1">   &emsp;
         <span role="alert" id="c1" style="display: none"></span>
     </p>
-    <p><button onclick="validateAnswer(1)" class="btn btn-light checkBtn">Prüfen</button></p>
+    <p><button class="btn btn-light checkBtn">Prüfen</button></p>
 </form>
 
 <hr>
@@ -132,27 +140,24 @@ Name: <input id="nameId" type="text" value="..."><br><br>
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
 
-    
-    function validateAnswer(num) {
 
-        const input = document.getElementById("a" + num);
+    var input = document.getElementById("a" + 1);
 
-        if (input.value == {{correctSolution}}) {
-            input.style.border = "3px solid green";
-            input.style.color = "green";
+    if ({{answerGiven}} == {{correctSolution}}) {
+        input.value = {{answerGiven}};
+        input.style.border = "3px solid green";
+        input.style.color = "green";
+        input.style.textDecoration = "none";
+    } else {
+        var correction = document.getElementById("c" + 1);
+        input.value = {{answerGiven}};
+        input.style.border = "3px solid red";
+        input.style.color = "red";
+        input.style.textDecoration = "line-through";
 
-        } else {
-            var correction = document.getElementById("c" + num);
-
-            input.style.border = "3px solid red";
-            input.style.color = "red";
-            input.style.textDecoration = "line-through";
-
-            correction.style.display = "inline-block";
-            correction.style.color = "grey";
-            correction.innerHTML = {{correctSolution}};
-
-        }
+        correction.style.display = "inline-block";
+        correction.style.color = "grey";
+        correction.innerHTML = {{correctSolution}};
     }
-
+        
 </script>
