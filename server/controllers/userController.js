@@ -258,10 +258,10 @@ exports.displayOneSheet = (req, res) => {
 //--> it stores the result in the database,  calculates the points for the exercise as well as stores the points 
 // and returns the points to the frontend
 exports.storeAnswer = (req, res) => {
-  let numberOfExercise = req.params.numberOfExercise
-  let answerGiven = req.body['a' + numberOfExercise];
+  let currentExercise = req.params.currentExercise
+  let answerGiven = req.body['a' + currentExercise];
 
-  console.log(numberOfExercise);
+  //console.log(currentExercise);
 
   // continue only if the user entered a float number which is in correct format
   if(/^\d{1,2}(\.\d{0,2})?$|^\.\d\d?$/.test(answerGiven)) {
@@ -269,11 +269,11 @@ exports.storeAnswer = (req, res) => {
       if (answerGiven) {
         connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], function(error, results, fields) {
 
-            let correctSolution = results[0]['lsg' + numberOfExercise];
-            let pointsForThisExercise = (correctSolution == answerGiven)? results[0]['p' + numberOfExercise]: 0;
-            connection.query('UPDATE results SET ans'+numberOfExercise+' = ?, p'+numberOfExercise+' = ? WHERE sheet_id = ? AND username = ?', [answerGiven, pointsForThisExercise, req.params.sheet_id, req.session.username]);
+            let correctSolution = results[0]['lsg' + currentExercise];
+            let pointsForThisExercise = (correctSolution == answerGiven)? results[0]['p' + currentExercise]: 0;
+            connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ? WHERE sheet_id = ? AND username = ?', [answerGiven, pointsForThisExercise, req.params.sheet_id, req.session.username]);
         
-            res.render(results[0].subject + '/' + results[0].name, {numberOfExercise, answerGiven, correctSolution});
+            res.render(results[0].subject + '/' + results[0].name, {currentExercise, answerGiven, correctSolution});
 
         });		
       }
@@ -282,10 +282,15 @@ exports.storeAnswer = (req, res) => {
   }
 
 }
-exports.anotherRoute = (req, res, next) => {
-  // In this route I don't need to intercept the response, so I just do it like normal.
-  return res.send({ message:'Feels good, man.' });
-};
+
+exports.nextQuestion = (req, res) => {
+  let currentExercise = req.params.currentExercise;
+  currentExercise++;
+  connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], function(error, results, fields) {
+    res.render(results[0].subject + '/' + results[0].name, {currentExercise});
+  });		
+}
+
 
 
 

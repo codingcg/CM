@@ -1,31 +1,64 @@
-<table>
+<table id="bar">
     <tr>
         <td id="first"> </td>
-        <td id="one"> </td>
-        <td id="two"> </td>
+
+        <td id="t1"> 1 </td>
+        <td id="t2"> 2 </td>
+        <td id="t3"> 3 </td>
+        <td id="t4"> 1 </td>
+        <td id="t5"> 2 </td>
+        <td id="t6"> 3 </td>
+
         <td id="last"> </td>
     </tr>
 </table>
 <br><br>
-<form action="/storeAnswer/1/1" method="post">
-    <p><label><b>Berechne 0,5 + 0,25 </b></label></p>
-    <p><input type="text" name="a1" id="a1">   &emsp;
-        <span role="alert" id="c1" style="display: none"></span>
-    </p>
-    <p><button class="btn btn-light checkBtn">Prüfen</button></p>
-</form>
+<div class="main-container">
 
-<hr>
-<form action="/storeAnswer/2/1" method="post">
-    <p><label><b>Berechne 5,1 - 3,5</b> </label></p>
-    <p><input type="text" name="a2" id="a2">   &emsp;
-        <span role="alert" id="c2" style="display: none"></span>
-    </p>
-    <p><button onclick="validateAnswer(2)" class="btn btn-light checkBtn">Prüfen</button></p>
-</form>
+    {{#ifEquals currentExercise undefined 1}}
+    <center>
+    <form action="/storeAnswer/1/1" method="post" id="ex1">
+        <p><label><b>Berechne 0,5 + 0,25 </b></label></p>
+        <p><input type="text" name="a1" id="a1" onfocus="this.value=''"> 
+            <span role="alert" id="c1" style="display: none"></span>
+        </p>
+        <p><button class="btn btn-light checkBtn">Prüfen</button>
+        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a></p>
+    </form>
+    </center>
+    {{/ifEquals}}
 
-<hr>
+    
+    {{#ifEquals currentExercise 2 2}}
+    <center>
+    <form action="/storeAnswer/2/1" method="post" id="ex2">
+        <p><label><b>Berechne 5,1 - 3,5</b> </label></p>
+        <p><input type="text" name="a2" id="a2" onfocus="this.value=''">   &emsp;
+            <span role="alert" id="c2" style="display: none"></span>
+        </p>
+        <p><button class="btn btn-light checkBtn">Prüfen</button>
+        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/2/1" style="display: none" id="n2">Nächste</a></p>
+    </form>
+    </center>
+    {{/ifEquals}}
 
+    {{#ifEquals currentExercise 3 3}}
+    <center>
+    <form action="/storeAnswer/3/1" method="post" id="ex3">
+        <p><label><b>Berechne 0,4 * 0,4 </b></label></p>
+        <p><input type="text" name="a3" id="a3" onfocus="this.value=''"> 
+            <span role="alert" id="c3" style="display: none"></span>
+        </p>
+        <p><button class="btn btn-light checkBtn">Prüfen</button>
+        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/3/1" style="display: none" id="n3">Nächste</a></p>
+
+
+    </form>
+    </center>
+    {{/ifEquals}}
+
+</div>
+<!--
 <form action="/a3/" method="post">
     <p><label><b>Berechne 0,4 * 0,4 </b></label></p>
     <p><input type="text" id="i3" class="exerciseInput"></p>
@@ -48,7 +81,6 @@
 
 <h3>Dezimalzahlen </h3>
         
-        <!-- ################################################################################ -->
         <hr class="my-4"><br>
         <p class="lead"  style="text-align: left;">
             
@@ -70,7 +102,6 @@
 
         </center>
 
-        <!-- ################################################################################ -->
         <hr class="my-4"><br>
         <p class="lead"  style="text-align: left;">
             
@@ -134,22 +165,30 @@
 Name: <input id="nameId" type="text" value="..."><br><br>
 <input id="buttonId" onclick="test()" type="submit"><br><br>
 
-<div id="containerId"><div>
+<div id="containerId"><div>-->
 
 
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
 
+    var input = document.getElementById("a" + {{currentExercise}});
+    var table_cell = document.getElementById("t" + {{currentExercise}});
 
-    var input = document.getElementById("a" + 1);
 
+    // CORRECT
     if ({{answerGiven}} == {{correctSolution}}) {
+        // green ....
         input.value = {{answerGiven}};
         input.style.border = "3px solid green";
         input.style.color = "green";
-        input.style.textDecoration = "none";
+        input.style.textDecoration = "none";    
+        document.getElementById("n" + {{currentExercise}}).style.display = "inline-block";
+
+        table_cell.style.backgroundColor = "green";
+
+    // WRONG    
     } else {
-        var correction = document.getElementById("c" + 1);
+        var correction = document.getElementById("c" + {{currentExercise}});
         input.value = {{answerGiven}};
         input.style.border = "3px solid red";
         input.style.color = "red";
@@ -158,6 +197,8 @@ Name: <input id="nameId" type="text" value="..."><br><br>
         correction.style.display = "inline-block";
         correction.style.color = "grey";
         correction.innerHTML = {{correctSolution}};
+
+        table_cell.style.backgroundColor = "red";
+
     }
-        
 </script>

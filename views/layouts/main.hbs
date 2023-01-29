@@ -18,31 +18,40 @@
       opacity: 0.6;
     }
 
-    table {
-      width: 100%;
-      opacity: 0.9;
-    }
-    #first{
-      border-radius: 20px 0px 0px 20px;
-      background: grey;
-      width: 1%;
-      height: 20px; 
-    }
-    #one{
-      background: red;
-      width: 40%;
-      height: 10%; 
+    input {
+      width: 5%; 
+      text-align: center;
     }
 
-    #two{
-      background: yellow;
-      width: 10%;      
+    input[type=text]:focus {
+      border: 3px solid grey !important;
+      color: black !important;
+      text-decoration: none !important;
+      outline: none;
+    }
+
+    table#bar {
+      width: 100%;
+      opacity: 0.9;
+      text-align: center;
+    }
+
+    #bar td {
+      background: grey;
+      width: .5%;
       height: 20px; 
     }
-    #last{
+
+    #bar #first{
+      border-radius: 20px 0px 0px 20px;
+      background: grey;
+      width: .05%;
+      height: 20px; 
+    }
+    #bar #last{
       border-radius: 0px 20px 20px 0px;
       background: grey;
-      width: 1%;
+      width: .05%;
       height: 20px; 
     }
 

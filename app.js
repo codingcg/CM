@@ -31,4 +31,8 @@ app.set('view engine', '.hbs');
 const userRoutes = require('./server/routes/user');
 app.use('/', userRoutes);
 
+handlebars.handlebars.registerHelper('ifEquals', function(arg1, arg2, arg3, options) {
+    return (arg1 == arg2 | arg1 == arg3) ? options.fn(this) : options.inverse(this);
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
