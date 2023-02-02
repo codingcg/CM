@@ -1,0 +1,36 @@
+ <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Übersicht</li>
+ </ol>
+
+<table id="overview" class="table table-bordered">
+  <!--<thead class="thead-dark">
+    <tr>
+      <th scope="col">AB</th>
+      <th scope="col">Name</th>
+      <th scope="col">P1</th>
+      <th scope="col">P2</th>
+      <th scope="col">P3</th>
+      <th scope="col">P4</th>
+      <th scope="col">Punkte</th>
+    </tr>
+  </thead>-->
+  <tbody>
+
+    {{#each results}}
+    <tr>
+      <td>{{this.username}}</td>
+      {{#ifEqual this.p1 0}} <td class="redCell">{{this.p1}}</td> {{/ifEqual}}
+      {{#ifNotEqual this.p1 0}} <td class="greenCell">{{this.p1}}</td> {{/ifNotEqual}}
+
+      {{#ifEqual this.p2 0}} <td class="redCell">{{this.p2}}</td> {{/ifEqual}}
+      {{#ifNotEqual this.p2 0}} <td class="greenCell">{{this.p2}}</td> {{/ifNotEqual}}
+
+      {{#ifEqual this.reached_points 4}} <td class="redCell">{{this.reached_points}}</td> {{/ifEqual}}
+      {{#ifNotEqual this.reached_points 4}} <td class="greenCell">{{this.reached_points}}</td> {{/ifNotEqual}}
+
+    </tr>
+    {{/each}}
+
+  </tbody>
+</table>

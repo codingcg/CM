@@ -242,8 +242,10 @@ exports.logout = (req, res) => {
 // display one sheet, for example Bruch_T1
 exports.displayOneSheet = (req, res) => {  
   if (req.session.loggedin) {
-
+    //console.log(req.params.sheet_id);
+    //connection.query('SELECT * FROM sheets s, results r WHERE s.sheet_id = r.sheet_id AND s.sheet_id = ? AND s.username = ?', [req.params.sheet_id, req.session.username], (err, results) => {
     connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], (err, results) => {
+      //console.log(results[0]);
 
       res.render(results[0].subject + '/' + results[0].name);
     });
@@ -290,10 +292,46 @@ exports.nextQuestion = (req, res) => {
     res.render(results[0].subject + '/' + results[0].name, {currentExercise});
   });		
 }
+/*exports.getSheetStatus = (req, res) => {
+  connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], function(error, results, fields) {
+    res.render(results[0].subject + '/' + results[0].name, {results[0].points, results[0].subject, results[0].name});
+  });		
+}*/
 
 
 
 
+
+
+// all student progress
+exports.overview = (req, res) => {
+  if (req.session.loggedin /*&& req.session.admin*/) {
+    
+    connection.query('SELECT * FROM results WHERE sheet_id = ?', [1], function(error, results) {
+      if (!error) {
+        console.log(results);
+        res.render('overview', {results});
+      } else {
+        console.log(error);
+      }
+    });
+  } else {
+    res.render('login', {layout: 'loginLayout.hbs'});
+  }
+
+  /*connection.query('SELECT * FROM user WHERE status = "active" AND course_id = 1', (err, rows) => {
+    if (!err) {
+      let removedUser = req.query.removed;
+      let username = req.session.username;
+      res.render('overview', { rows, removedUser, username});
+    } else {
+      console.log(err);
+    }
+  });
+} else {
+  res.render('login', {layout: 'loginLayout.hbs'});
+}*/
+}
 
 
 

@@ -1,3 +1,5 @@
+<!--<a id="load" class="btn btn-light checkBtn" type="button" href="/getSheetStatus/1" style="display: none" id="n2">Nächste</a></p>-->
+
 <table id="bar">
     <tr>
         <td id="first"> </td>
@@ -5,9 +7,7 @@
         <td id="t1"> 1 </td>
         <td id="t2"> 2 </td>
         <td id="t3"> 3 </td>
-        <td id="t4"> 1 </td>
-        <td id="t5"> 2 </td>
-        <td id="t6"> 3 </td>
+        <td id="t4"> 4 </td>
 
         <td id="last"> </td>
     </tr>
@@ -28,7 +28,6 @@
     </center>
     {{/ifEquals}}
 
-    
     {{#ifEquals currentExercise 2 2}}
     <center>
     <form action="/storeAnswer/2/1" method="post" id="ex2">
@@ -56,77 +55,84 @@
     </form>
     </center>
     {{/ifEquals}}
+    
 
-</div>
-<!--
-<form action="/a3/" method="post">
-    <p><label><b>Berechne 0,4 * 0,4 </b></label></p>
-    <p><input type="text" id="i3" class="exerciseInput"></p>
-    <p><button class="btn btn-light checkBtn">Prüfen</button></p>
-</form>
-
-<hr>
-
-<form action="/a4/" method="post">
-    <p><label><b>Berechne 1,3 : 0,2 </b></label></p>
-    <p><input type="text" id="i4" class="exerciseInput"></p>
-    <p><button class="btn btn-light checkBtn">Prüfen</button></p>
-</form>
-<hr>
-
-<br>
-<a href="#">Zum nächsten Arbeitsblatt</a>
-
-
-
-<h3>Dezimalzahlen </h3>
-        
-        <hr class="my-4"><br>
-        <p class="lead"  style="text-align: left;">
-            
-        <u><b>Aufgabe 1</b></u>: Trage die entsprechende Dezimalzahl ein ( z.B. <span class="frac"><sup>1</sup><sub class="i1">10</sub></span> = 0,1).
-
+    {{#ifEquals currentExercise undefined 1}}
+    <center>
+    <form action="/storeAnswer/1/1" method="post" id="ex1" class="lead">
+        <p>Trage die Dezimalzahl ein.</p>
+        1 <div class="frac">
+            <span>1</span><span class="s">/</span><span class="bo">2</span>
+        </div>
+        = 
+        <input type="text" name="a1" id="a1" onfocus="this.value=''"> 
+            <span role="alert" id="c1" style="display: none"></span>
         </p>
-        <center style="font-size: 16pt">
-        
-            a)  <span class="frac"><sup>7&nbsp;</sup><sub class="i1">&nbsp;10</sub></span> = <input></input>  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-            b) <span class="frac"><sup>41&nbsp;</sup><sub class="i1">&nbsp;100</sub></span> =  <input></input>     
-            <br><br>
-            c) <span class="frac"><sup>27&nbsp;</sup><sub class="i1">&nbsp;1000</sub></span> = <input></input> &emsp;&emsp;&emsp;&emsp;
-            d)  <span class="frac"><sup>587&nbsp;</sup><sub class="i1">&nbsp;10000</sub></span> = <input></input>
-        <br><br>
-        
-        <button type="button" class="btn btn-primary btn">Prüfen &nbsp;<i class="fa fa-paper-plane"></i></button>
+        <p><button class="btn btn-light checkBtn">Prüfen</button>
+        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a></p>
+    </form>
+    </center>
+    {{/ifEquals}}
 
-
-
-        </center>
-
-        <hr class="my-4"><br>
-        <p class="lead"  style="text-align: left;">
-            
-        <u><b>Aufgabe 2</b></u>: Schreibe die Zahlen als Bruch (z.B. 0,1 = <span class="frac"><sup>1</sup><sub class="i1">10</sub></span>).
-
+     {{#ifEquals currentExercise undefined 1}}
+    <center>
+    <form action="/storeAnswer/1/1" method="post" id="ex1" class="lead">
+        <p>Trage die Dezimalzahl ein.</p>
+        3<div class="frac">
+            <span>4</span><span class="s">/</span><span class="bo">5</span>
+        </div>
+        = 
+        <input type="text" name="a1" id="a1" onfocus="this.value=''"> 
+            <span role="alert" id="c1" style="display: none"></span>
         </p>
-        <center style="font-size: 16pt">
-        a) 0,9 = <span class="frac"><sup><input></input></sup><sub><input class="i1"></input></sub></span> &emsp;&emsp;&emsp;&emsp;
-        b) 0,531 = <span class="frac"><sup><input></input></sup><sub><input class="i1"></input></sub></span>    &emsp;&emsp;&emsp;&emsp;
-        c) 0,93 = <span class="frac"><sup><input></input></sup><sub><input class="i1"></input></sub></span>
-        <br><br>
-        
-        <button type="button" class="btn btn-primary btn">Prüfen &nbsp;<i class="fa fa-paper-plane"></i></button>
+        <p><button class="btn btn-light checkBtn">Prüfen</button>
+        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a></p>
+    </form>
+    </center>
+    {{/ifEquals}}
 
-        </center>
+     {{#ifEquals currentExercise undefined 1}}
+    <center>
+    <form action="/storeAnswer/1/1" method="post" id="ex1" class="lead">
+        <p>Berechne </p>
+        0,5 + <div class="frac">
+            <span>1</span><span class="s">/</span><span class="bo">2</span>
+        </div>
+        = 
+        <input type="text" name="a1" id="a1" onfocus="this.value=''"> 
+            <span role="alert" id="c1" style="display: none"></span>
+        </p>
+        <p><button class="btn btn-light checkBtn">Prüfen</button>
+        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a></p>
+    </form>
+    </center>
+    {{/ifEquals}}
 
+    {{#ifEquals currentExercise undefined 1}}
+    <center>
+    <form action="/storeAnswer/1/1" method="post" id="ex1" class="lead">
+        <p>Berechne </p>
+        1,25 + <div class="frac">
+            <span>1</span><span class="s">/</span><span class="bo">4</span>
+        </div>
+        = 
+        <input type="text" name="a1" id="a1" onfocus="this.value=''"> 
+            <span role="alert" id="c1" style="display: none"></span>
+        </p>
+        <p><button class="btn btn-light checkBtn">Prüfen</button>
+        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a></p>
+    </form>
+    </center>
+    {{/ifEquals}}
 
-        
+    
 
 
 
 <br><br>
 
 <hr>
-
+<!--
 <h1>Auswertung für die Lehrkraft</h1>
 <br><br> 
 <h2>Kurs: 
@@ -162,10 +168,7 @@
 
 </div>
 
-Name: <input id="nameId" type="text" value="..."><br><br>
-<input id="buttonId" onclick="test()" type="submit"><br><br>
-
-<div id="containerId"><div>-->
+-->
 
 
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -174,6 +177,20 @@ Name: <input id="nameId" type="text" value="..."><br><br>
     var input = document.getElementById("a" + {{currentExercise}});
     var table_cell = document.getElementById("t" + {{currentExercise}});
 
+    var bar = document.getElementById("bar");
+    var tds = bar.getElementsByTagName("td");
+
+    //document.getElementById("load").click();
+
+    console.log({{currentExercise}});
+    for (var i = 0; i <= {{currentExercise}}; i++) {
+            //tds[i].style.cssText = 'background-color: yellow';
+            //tds[i].style.setProperty('background-color', 'yellow', 'important');
+            //tds[i].setAttribute('style', 'background-color:yellow !important');
+            tds[i].style.backgroundColor = "yellow";
+
+    }
+    
 
     // CORRECT
     if ({{answerGiven}} == {{correctSolution}}) {
@@ -184,7 +201,7 @@ Name: <input id="nameId" type="text" value="..."><br><br>
         input.style.textDecoration = "none";    
         document.getElementById("n" + {{currentExercise}}).style.display = "inline-block";
 
-        table_cell.style.backgroundColor = "green";
+        //table_cell.style.backgroundColor = "green";
 
     // WRONG    
     } else {

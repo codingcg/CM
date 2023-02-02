@@ -35,4 +35,13 @@ handlebars.handlebars.registerHelper('ifEquals', function(arg1, arg2, arg3, opti
     return (arg1 == arg2 | arg1 == arg3) ? options.fn(this) : options.inverse(this);
 });
 
+handlebars.handlebars.registerHelper('ifEqual', function(arg1, arg2, options) {
+    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+});
+handlebars.handlebars.registerHelper('ifNotEqual', function(arg1, arg2, options) {
+    return (arg1 != arg2) ? options.fn(this) : options.inverse(this);
+});
+
+
+
 app.listen(port, () => console.log(`Listening on port ${port}`));

@@ -55,6 +55,54 @@
       height: 20px; 
     }
 
+
+    /* Fractions */
+
+    .frac {
+        display: inline-block;
+        position: relative;
+        vertical-align: middle;
+        letter-spacing: 0.001em;
+        text-align: center;
+    }
+    .frac > span {
+        display: block;
+        padding: 0.1em;
+    }
+    .frac span.bo {
+        border-top: thin solid black;
+    }
+    .frac span.s {
+        display: none;
+    } 
+
+    /*    */
+
+
+
+    .redCell {
+        background-color: red !important;
+    }
+
+
+    .orangeCell {
+        background-color: orange !important;
+    }
+
+
+    .greenCell {
+        background-color: green !important;
+    }
+
+    table#overview {
+      border: 1px solid lightgrey !important; 
+      width: 10% !important;
+    }
+
+    table#overview tr, table#overview td {
+      border: 0px solid black !important; 
+    }
+
   </style>
 </head>
 
@@ -73,6 +121,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/sus">Alle SuS</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/overview">Übersicht</a>
           </li>
         </ul>
 

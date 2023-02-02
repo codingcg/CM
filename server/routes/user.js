@@ -16,6 +16,7 @@ router.get('/', userController.login);
 router.post('/auth', userController.auth);
 router.post('/logout', userController.logout);
 
+router.get('/overview', userController.overview);
 
 
 
@@ -25,6 +26,8 @@ router.get('/displayOneSheet/:sheet_id', userController.displayOneSheet);
 // store sheet results in db
 router.post('/storeAnswer/:currentExercise/:sheet_id', userController.storeAnswer);
 router.get('/nextQuestion/:currentExercise/:sheet_id', userController.nextQuestion);
+
+//router.get('/getSheetStatus/:sheet_id', userController.getSheetStatus);
 
 router.get('/:id',userController.delete);
 
