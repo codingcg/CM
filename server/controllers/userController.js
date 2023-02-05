@@ -273,14 +273,26 @@ exports.storeAnswer = (req, res) => {
 
             let correctSolution = results[0]['lsg' + currentExercise];
             let pointsForThisExercise = (correctSolution == answerGiven)? results[0]['p' + currentExercise]: 0;
-            connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ? WHERE sheet_id = ? AND username = ?', [answerGiven, pointsForThisExercise, req.params.sheet_id, req.session.username]);
         
+            var tmp = "ans" + currentExercise;
+            // check if the column exists in the database
+            connection.query('SELECT COUNT(*) AS count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = "results" AND COLUMN_NAME = ?', [tmp], function(error, results, fields) {
+              console.log(results[0].count);
+              if (results[0].count == 0) {
+                //if it doesn't exist, add it
+                connection.query('ALTER TABLE results ADD COLUMN ans'+currentExercise+' float(1) NOT NULL DEFAULT 0, ADD COLUMN p'+currentExercise+' float(1) NOT NULL DEFAULT 0');
+              }
+            });
+            // now add the user input to the new or existing column
+            connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ? WHERE sheet_id = ? AND username = ?', [answerGiven, pointsForThisExercise, req.params.sheet_id, req.session.username]);
+
+
             res.render(results[0].subject + '/' + results[0].name, {currentExercise, answerGiven, correctSolution});
 
         });		
       }
   } else {
-    res.send("Falsches Format");
+    //res.send("Falsches Format");
   }
 
 }
@@ -292,13 +304,6 @@ exports.nextQuestion = (req, res) => {
     res.render(results[0].subject + '/' + results[0].name, {currentExercise});
   });		
 }
-/*exports.getSheetStatus = (req, res) => {
-  connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], function(error, results, fields) {
-    res.render(results[0].subject + '/' + results[0].name, {results[0].points, results[0].subject, results[0].name});
-  });		
-}*/
-
-
 
 
 
@@ -318,19 +323,6 @@ exports.overview = (req, res) => {
   } else {
     res.render('login', {layout: 'loginLayout.hbs'});
   }
-
-  /*connection.query('SELECT * FROM user WHERE status = "active" AND course_id = 1', (err, rows) => {
-    if (!err) {
-      let removedUser = req.query.removed;
-      let username = req.session.username;
-      res.render('overview', { rows, removedUser, username});
-    } else {
-      console.log(err);
-    }
-  });
-} else {
-  res.render('login', {layout: 'loginLayout.hbs'});
-}*/
 }
 
 
