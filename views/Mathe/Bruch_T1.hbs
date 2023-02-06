@@ -20,7 +20,7 @@
     <form action="/storeAnswer/1/1" method="post" id="ex1" class="lead">
         <p>Berechne</p>
         0,5 + 0,25 = 
-        <input type="text" name="a1" id="a1" onfocus="this.value=''" autofocus required pattern="[0-9]+.?[0-9]*" title="Gib eine Dezimalzahl ein."> 
+        <input type="text" name="a1" id="a1" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
         <span role="alert" id="c1" style="display: none"></span>
         <br><br>
         <p><button class="btn btn-light checkBtn" id="b1">Prüfen</button>
@@ -36,7 +36,7 @@
     <form action="/storeAnswer/2/1" method="post" id="ex2" class="lead">
         <p>Berechne</p>
         5,1 - 3,5 =
-        <input type="text" name="a2" id="a2" onfocus="this.value=''" autofocus required>
+        <input type="text" name="a2" id="a2" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein.">
         <span role="alert" id="c2" style="display: none"></span>
         <br><br>
         <p><button class="btn btn-light checkBtn" id="b2">Prüfen</button>
@@ -50,7 +50,7 @@
     <form action="/storeAnswer/3/1" method="post" id="ex3" class="lead">
         <p>Berechne</p>
         0,4 * 0,4 =
-        <input type="text" name="a3" id="a3" onfocus="this.value=''" autofocus required> 
+        <input type="text" name="a3" id="a3" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
         <span role="alert" id="c3" style="display: none"></span>
         <br><br>
         <p><button class="btn btn-light checkBtn" id="b3">Prüfen</button>
@@ -70,7 +70,7 @@
             <span>1</span><span class="s">/</span><span class="bo">2</span>
         </div>
         = 
-        <input type="text" name="a4" id="a4" onfocus="this.value=''" autofocus required> 
+        <input type="text" name="a4" id="a4" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
             <span role="alert" id="c4" style="display: none"></span>
         </p>
         <p><button class="btn btn-light checkBtn" id="b4">Prüfen</button>
@@ -87,7 +87,7 @@
             <span>4</span><span class="s">/</span><span class="bo">5</span>
         </div>
         = 
-        <input type="text" name="a5" id="a5" onfocus="this.value=''" autofocus required> 
+        <input type="text" name="a5" id="a5" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
             <span role="alert" id="c5" style="display: none"></span>
         </p>
         <p><button class="btn btn-light checkBtn" id="b5">Prüfen</button>
@@ -104,7 +104,7 @@
             <span>1</span><span class="s">/</span><span class="bo">2</span>
         </div>
         = 
-        <input type="text" name="a6" id="a6" onfocus="this.value=''" autofocus required> 
+        <input type="text" name="a6" id="a6" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
             <span role="alert" id="c6" style="display: none"></span>
         </p>
         <p><button class="btn btn-light checkBtn" id="b6">Prüfen</button>
@@ -121,7 +121,7 @@
             <span>1</span><span class="s">/</span><span class="bo">4</span>
         </div>
         = 
-        <input type="text" name="a7" id="a7" onfocus="this.value=''" autofocus required> 
+        <input type="text" name="a7" id="a7" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
             <span role="alert" id="c7" style="display: none"></span>
         </p>
         <p><button class="btn btn-light checkBtn" id="b7">Prüfen</button>
@@ -132,8 +132,31 @@
 
     
 
+
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+        <h2>Ups, leider falsch.</h2>
+        <span class="close">&times;</span>
+    </div>
+    <div class="modal-body">
+      <p>Probier es noch einmal.</p>
+    </div>
+    <!--<div class="modal-footer">
+      <h3>Modal Footer</h3>
+    </div>-->
+  </div>
+
+</div>
+
+
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
+
 
     var input = document.getElementById("a" + {{currentExercise}});
     var btn = document.getElementById("b" + {{currentExercise}});
@@ -158,7 +181,7 @@
     // CORRECT
     if ({{answerGiven}} == {{correctSolution}}) {
         // green ....
-        input.value = {{answerGiven}};
+        input.value = String({{answerGiven}}).replace(".",",");
         input.style.border = "3px solid green";
         input.style.color = "green";
         input.style.textDecoration = "none";    
@@ -168,19 +191,44 @@
 
     // WRONG    
     } else {
+        //alert("Ups, deine Lösung war falsch. Probier es noch einmal.")
         var correction = document.getElementById("c" + {{currentExercise}});
-        input.value = {{answerGiven}};
+        input.value = String({{answerGiven}}).replace(".",",");
         input.style.border = "3px solid red";
         input.style.color = "red";
         input.style.textDecoration = "line-through";
 
-        correction.style.display = "inline-block";
+        /*correction.style.display = "inline-block";
         correction.style.color = "grey";
-        correction.innerHTML = {{correctSolution}};
+        correction.innerHTML = String({{correctSolution}}).replace(".",",");*/
 
+        /*correction.style.display = "inline-block";
+        correction.style.color = "grey";
+        correction.innerHTML = "Leider falsch, probier es noch einmal.";*/
+
+        openModal();
         table_cell.style.backgroundColor = "red";
 
     }
+
+
+    var modal =  document.getElementById("myModal");
+    // When the user clicks the button, open the modal 
+    function openModal() {
+       modal.style.display = "block";
+    }
+    // When the user clicks on <span> (x), close the modal
+    document.getElementsByClassName("close")[0].onclick = function() {
+        modal.style.display = "none";
+    }
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+
 
 
 </script>

@@ -271,9 +271,7 @@ exports.displayOneSheet = (req, res) => {
 // and returns the points to the frontend
 exports.storeAnswer = (req, res) => {
   let currentExercise = req.params.currentExercise
-  let answerGiven = req.body['a' + currentExercise];
-
-  //console.log(currentExercise);
+  let answerGiven = req.body['a' + currentExercise].replace(",", ".");
 
   // continue only if the user entered a float number which is in correct format
   if(/^\d{1,2}(\.\d{0,2})?$|^\.\d\d?$/.test(answerGiven)) {
