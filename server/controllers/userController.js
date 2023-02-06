@@ -173,7 +173,8 @@ exports.sheets = (req, res) => {
       // When done with the connection, release it
       if (!err) {
         //let removedUser = req.query.removed;
-        res.render('sheets', { rows });
+        var admin = req.session.admin;
+        res.render('sheets', { rows, admin });
       } else {
         console.log(err);
       }
@@ -217,14 +218,23 @@ exports.auth = (req, res) => {
 				req.session.loggedin = true;
 				req.session.username = username;
         req.session.admin = (results[0].role == 'teacher') ? true : false;
+        //var admin = req.session.admin;
         //console.log("The user " + req.session.username + " has the role " +  results[0].role + " which equals admin = " + req.session.admin);
 
 				// Redirect to home page
-				res.redirect('/sheets');
+        if (req.session.admin) {
+          //res.render('overview', {admin});
+          res.redirect('/overview');
+
+        } else {
+          //res.render('sheets', {admin});
+          res.redirect('/sheets');
+        }
+
 			} else {
 				res.send('Incorrect Username and/or Password!');
 			}			
-			res.end();
+			//res.end();
 		});
 	} else {
 		res.send('Please enter Username and Password!');
@@ -235,7 +245,7 @@ exports.auth = (req, res) => {
 // Logout
 exports.logout = (req, res) => {
   req.session.destroy();
-  res.render('login', {layout: 'loginLayout.hbs'});
+  res.render('login', {layout: 'loginLayout.hbs', alert: `Du wurdest wurdest abgemeldet.`});
 }
 
 
@@ -314,8 +324,9 @@ exports.overview = (req, res) => {
     
     connection.query('SELECT * FROM results WHERE sheet_id = ?', [1], function(error, results) {
       if (!error) {
-        console.log(results);
-        res.render('overview', {results});
+        //console.log(results);
+        var admin = req.session.admin;
+        res.render('overview', {results, admin});
       } else {
         console.log(error);
       }
