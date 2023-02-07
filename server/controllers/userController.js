@@ -305,11 +305,10 @@ exports.displayOneSheet = (req, res) => {
 }*/
 
 exports.storeAnswer = (req, res) => {
-  console.log("TEst");
+  //let currentExercise = req.params.currentExercise;
+  let currentExercise = req.body.currentExercise;
+  let answerGiven = req.body.answerGiven.replace(",", ".");
 
-  let currentExercise = req.params.currentExercise
-  let answerGiven = req.body.answer.replace(",", ".");
-  console.log(answerGiven, currentExercise);
   // continue only if the user entered a float number which is in correct format
   if(/^\d{1,2}(\.\d{0,2})?$|^\.\d\d?$/.test(answerGiven)) {
 
@@ -322,7 +321,7 @@ exports.storeAnswer = (req, res) => {
             var tmp = "ans" + currentExercise;
             // check if the column exists in the database
             connection.query('SELECT COUNT(*) AS count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = "results" AND COLUMN_NAME = ?', [tmp], function(error, results, fields) {
-              console.log(results[0].count);
+              //console.log(results[0].count);
               if (results[0].count == 0) {
                 //if it doesn't exist, add it
                 connection.query('ALTER TABLE results ADD COLUMN ans'+currentExercise+' float(1) NOT NULL DEFAULT 0, ADD COLUMN p'+currentExercise+' float(1) NOT NULL DEFAULT 0');
@@ -333,8 +332,8 @@ exports.storeAnswer = (req, res) => {
 
 
             //res.render(results[0].subject + '/' + results[0].name, {currentExercise, answerGiven, correctSolution});
-            //res.send({results, currentExercise, answerGiven, correctSolution});
-            res.send({"answer": "true"});
+            res.send({results, answerGiven, correctSolution});
+            //res.send({"answer": "true"});
 
         });		
       }

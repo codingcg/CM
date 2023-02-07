@@ -1,28 +1,3 @@
-<script type="text/javascript"></script>
-<script>
-    
-    function storeAnswer() {
-        //console.log(document.getElementById("a1").value);
-
-        $.ajax({
-        type: "POST",
-        url: "/storeAnswer/1/1",
-        data: {
-            "answer": document.getElementById('a1').value
-        },
-        success: function(data) {
-            if(data.answer) {
-                alert("success!")
-            } else {
-                alert("failed")
-            }
-        }
-    });
-        
-    }
-
-</script>
-
 <!--<a id="load" class="btn btn-light checkBtn" type="button" href="/getSheetStatus/1" style="display: none" id="n2">Nächste</a></p>-->
 <table id="bar">
     <tr>
@@ -44,15 +19,17 @@
         
     <!--<form id="ex1" action="/storeAnswer/1/1" method="post" class="lead">-->
         <p>Berechne</p>
+        <br>
         0,5 + 0,25 = 
-        <input type="text" name="a1" id="a1" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
+        <input type="text" name="a1" id="a1" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein." autocomplete="off"> 
         <span role="alert" id="c1" style="display: none"></span>
-        <br><br>
-        <p><button class="btn btn-light checkBtn" id="b1" onclick="storeAnswer()">Prüfen</button>
+        <br><br><br>
+        <button class="btn btn-secondary" id="b1" onclick="storeAnswer(1)">Prüfen</button>
 
-        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a></p>
+        <a class="btn btn-success" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a>
 
     <!--</form>-->
+
     </center>
     {{/ifEquals}}
 
@@ -64,8 +41,8 @@
         <input type="text" name="a2" id="a2" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein.">
         <span role="alert" id="c2" style="display: none"></span>
         <br><br>
-        <p><button class="btn btn-light checkBtn" id="b2">Prüfen</button>
-        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/2/1" style="display: none" id="n2">Nächste</a></p>
+        <button class="btn btn-light checkBtn" id="b2">Prüfen</button>
+        <a class="btn btn-success" type="button" href="/nextQuestion/2/1" style="display: none" id="n2">Nächste</a>
     </form>
     </center>
     {{/ifEquals}}
@@ -169,7 +146,10 @@
         <span class="close">&times;</span>
     </div>
     <div class="modal-body">
-      <p>Probier es noch einmal.</p>
+        <p><center>
+            <button type="button" class="btn" style="background-color:rgba(175, 57, 57, 0.5)" onclick="closeModal()"><i class="bi bi-arrow-clockwise"></i> &nbsp; Nochmal probieren</button>
+            <button type="button" class="btn" style="background-color:rgba(214, 189, 61, 0.5)"><i class="bi bi-question-diamond"></i> &nbsp;Hilfe</button>
+        </center></p>
     </div>
     <!--<div class="modal-footer">
       <h3>Modal Footer</h3>
@@ -178,86 +158,85 @@
 
 </div>
 
-
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
 
+    var modal =  document.getElementById("myModal");
 
-  
-   /* var input = document.getElementById("a" + {{currentExercise}});
-    var btn = document.getElementById("b" + {{currentExercise}});
+    var input = document.getElementById('a1');
+    var checkBtn = document.getElementById('b1');
+    var nextBtn = document.getElementById('n1');
 
-    var table_cell = document.getElementById("t" + {{currentExercise}});
-
-    var bar = document.getElementById("bar");
-    var tds = bar.getElementsByTagName("td");
-
-    //document.getElementById("load").click();
-
-    for (var i = 0; i <= {{currentExercise}}; i++) {
-            //tds[i].style.cssText = 'background-color: yellow';
-            //tds[i].style.setProperty('background-color', 'yellow', 'important');
-            //tds[i].setAttribute('style', 'background-color:yellow !important');
-            tds[i].style.backgroundColor = "yellow";
-
-    }
+    /*********  FUNCTIONS ***********/
     
+    function storeAnswer(currentExercise) {
+        input = document.getElementById('a' + currentExercise);
+        checkBtn = document.getElementById("b" + currentExercise);
+        nextBtn = document.getElementById("n" + currentExercise);
 
-    // CORRECT
-    if ({{answerGiven}} == {{correctSolution}}) {
-        // green ....
-        input.value = String({{answerGiven}}).replace(".",",");
-        input.style.border = "3px solid green";
-        input.style.color = "green";
-        input.style.textDecoration = "none";    
-        document.getElementById("n" + {{currentExercise}}).style.display = "inline-block";
-        btn.style.display = "none";
-        //table_cell.style.backgroundColor = "green";
+        $.ajax({
+            type: "POST",
+            url: "/storeAnswer/1/1",
+            data: {
+                "answerGiven": input.value.replace(",","."),
+                "currentExercise": currentExercise,
+        },
+        success: function(data) {
+            if (data.answerGiven == data.correctSolution) {
+                // green ....
+                input.value = String(data.answerGiven).replace(".",",");
+                input.style.backgroundColor = "rgba(56, 170, 67, 0.5)";
+                checkBtn.style.display = "none";
+                nextBtn.style.display = "inline-block";
 
-    // WRONG    
-    } else {
-        //alert("Ups, deine Lösung war falsch. Probier es noch einmal.")
-        var correction = document.getElementById("c" + {{currentExercise}});
-        input.value = String({{answerGiven}}).replace(".",",");
-        input.style.border = "3px solid red";
-        input.style.color = "red";
-        input.style.textDecoration = "line-through";
+            } else {
+                openModal();
 
-        /*correction.style.display = "inline-block";
-        correction.style.color = "grey";
-        correction.innerHTML = String({{correctSolution}}).replace(".",",");*/
+                //$('#c' + currentExercise).replaceWith(String(data.correctSolution).replace(".",","));
+                //$('#tt').append(data.results[0].name);
+            }
+        }
+        });
+    }
 
-        /*correction.style.display = "inline-block";
-        correction.style.color = "grey";
-        correction.innerHTML = "Leider falsch, probier es noch einmal.";*/
-
-        /*openModal();
-        table_cell.style.backgroundColor = "red";
-
-    }*/
-
-
-
-
-    /*******      MODAL        *******/
-
-    /*var modal =  document.getElementById("myModal");
-    // When the user clicks the button, open the modal 
     function openModal() {
        modal.style.display = "block";
     }
+
+
+
+
+    /****** Event Listeners ****/
+
+    input.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            checkBtn.click();
+        }
+    });
+
     // When the user clicks on <span> (x), close the modal
     document.getElementsByClassName("close")[0].onclick = function() {
-        modal.style.display = "none";
+        closeModal();
     }
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == modal) {
-            modal.style.display = "none";
+            closeModal();
         }
-    }*/
+    }
+
+    window.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            closeModal();
+        }
+    });
 
 
-
-
+    function closeModal() {
+        modal.style.display = "none";
+        input.value = "";
+        input.focus();
+    }
 </script>
