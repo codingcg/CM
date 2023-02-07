@@ -16,20 +16,16 @@
 
    {{#ifEquals currentExercise undefined 1}}
     <center>
-        
-    <!--<form id="ex1" action="/storeAnswer/1/1" method="post" class="lead">-->
         <p>Berechne</p>
         <br>
         0,5 + 0,25 = 
         <input type="text" name="a1" id="a1" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein." autocomplete="off"> 
-        <span role="alert" id="c1" style="display: none"></span>
-        <br><br><br>
+        <br><br>
+        <span role="alert" id="c1" style="display: none; color: red"></span>
+        <br><br>
         <button class="btn btn-secondary" id="b1" onclick="storeAnswer(1)">Prüfen</button>
 
         <a class="btn btn-success" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a>
-
-    <!--</form>-->
-
     </center>
     {{/ifEquals}}
 
@@ -163,40 +159,52 @@
 
     var modal =  document.getElementById("myModal");
 
-    var input = document.getElementById('a1');
+    var input = document.getElementById('a1');    
+    var notes = document.getElementById('c1');
     var checkBtn = document.getElementById('b1');
     var nextBtn = document.getElementById('n1');
+
 
     /*********  FUNCTIONS ***********/
     
     function storeAnswer(currentExercise) {
         input = document.getElementById('a' + currentExercise);
+        notes = document.getElementById('c' + currentExercise);
         checkBtn = document.getElementById("b" + currentExercise);
         nextBtn = document.getElementById("n" + currentExercise);
 
-        $.ajax({
-            type: "POST",
-            url: "/storeAnswer/1/1",
-            data: {
-                "answerGiven": input.value.replace(",","."),
-                "currentExercise": currentExercise,
-        },
-        success: function(data) {
-            if (data.answerGiven == data.correctSolution) {
-                // green ....
-                input.value = String(data.answerGiven).replace(".",",");
-                input.style.backgroundColor = "rgba(56, 170, 67, 0.5)";
-                checkBtn.style.display = "none";
-                nextBtn.style.display = "inline-block";
+        if (!input.checkValidity()){
+            //input.reportValidity(); 
+            notes.innerHTML = "Bitte gib eine Dezimalzahl ein."
+            notes.style.display = "inline-block";
 
-            } else {
-                openModal();
+        } else {
+            notes.style.display = "none";
 
-                //$('#c' + currentExercise).replaceWith(String(data.correctSolution).replace(".",","));
-                //$('#tt').append(data.results[0].name);
+            $.ajax({
+                type: "POST",
+                url: "/storeAnswer/1/1",
+                data: {
+                    "answerGiven": input.value.replace(",","."),
+                    "currentExercise": currentExercise,
+            },
+            success: function(data) {
+                if (data.answerGiven == data.correctSolution) {
+                    // green ....
+                    input.value = String(data.answerGiven).replace(".",",");
+                    input.style.backgroundColor = "rgba(56, 170, 67, 0.5)";
+                    checkBtn.style.display = "none";
+                    nextBtn.style.display = "inline-block";
+
+                } else {
+                    openModal();
+
+                    //$('#c' + currentExercise).replaceWith(String(data.correctSolution).replace(".",","));
+                    //$('#tt').append(data.results[0].name);
+                }
             }
+            });
         }
-        });
     }
 
     function openModal() {
@@ -206,14 +214,15 @@
 
 
 
-    /****** Event Listeners ****/
 
+    /****** Event Listeners ****/
     input.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
             event.preventDefault();
-            checkBtn.click();
+            checkBtn.click(); 
         }
     });
+
 
     // When the user clicks on <span> (x), close the modal
     document.getElementsByClassName("close")[0].onclick = function() {
@@ -228,14 +237,17 @@
 
     window.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
+            //alert(document.querySelectorAll('.modal.in').length > 0);
             event.preventDefault();
             closeModal();
         }
     });
+   
 
 
     function closeModal() {
         modal.style.display = "none";
+        //notes.style.display = "none";
         input.value = "";
         input.focus();
     }

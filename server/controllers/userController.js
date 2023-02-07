@@ -338,7 +338,7 @@ exports.storeAnswer = (req, res) => {
         });		
       }
   } else {
-    //res.send("Falsches Format");
+      //res.send({"wrong": "Falsches Format"});
   }
 
 }
