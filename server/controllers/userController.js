@@ -255,7 +255,6 @@ exports.displayOneSheet = (req, res) => {
     //console.log(req.params.sheet_id);
     //connection.query('SELECT * FROM sheets s, results r WHERE s.sheet_id = r.sheet_id AND s.sheet_id = ? AND s.username = ?', [req.params.sheet_id, req.session.username], (err, results) => {
     connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], (err, results) => {
-      //console.log(results[0]);
 
       res.render(results[0].subject + '/' + results[0].name);
     });
@@ -269,7 +268,8 @@ exports.displayOneSheet = (req, res) => {
 // store answer is called every time the user clicks Prüfen 
 //--> it stores the result in the database,  calculates the points for the exercise as well as stores the points 
 // and returns the points to the frontend
-exports.storeAnswer = (req, res) => {
+
+/*exports.storeAnswer = (req, res) => {
   let currentExercise = req.params.currentExercise
   let answerGiven = req.body['a' + currentExercise].replace(",", ".");
 
@@ -296,6 +296,45 @@ exports.storeAnswer = (req, res) => {
 
 
             res.render(results[0].subject + '/' + results[0].name, {currentExercise, answerGiven, correctSolution});
+        });		
+      }
+  } else {
+    //res.send("Falsches Format");
+  }
+
+}*/
+
+exports.storeAnswer = (req, res) => {
+  console.log("TEst");
+
+  let currentExercise = req.params.currentExercise
+  let answerGiven = req.body.answer.replace(",", ".");
+  console.log(answerGiven, currentExercise);
+  // continue only if the user entered a float number which is in correct format
+  if(/^\d{1,2}(\.\d{0,2})?$|^\.\d\d?$/.test(answerGiven)) {
+
+      if (answerGiven) {
+        connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], function(error, results, fields) {
+
+            let correctSolution = results[0]['lsg' + currentExercise];
+            let pointsForThisExercise = (correctSolution == answerGiven)? results[0]['p' + currentExercise]: 0;
+        
+            var tmp = "ans" + currentExercise;
+            // check if the column exists in the database
+            connection.query('SELECT COUNT(*) AS count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = "results" AND COLUMN_NAME = ?', [tmp], function(error, results, fields) {
+              console.log(results[0].count);
+              if (results[0].count == 0) {
+                //if it doesn't exist, add it
+                connection.query('ALTER TABLE results ADD COLUMN ans'+currentExercise+' float(1) NOT NULL DEFAULT 0, ADD COLUMN p'+currentExercise+' float(1) NOT NULL DEFAULT 0');
+              }
+            });
+            // now add the user input to the new or existing column
+            connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ? WHERE sheet_id = ? AND username = ?', [answerGiven, pointsForThisExercise, req.params.sheet_id, req.session.username]);
+
+
+            //res.render(results[0].subject + '/' + results[0].name, {currentExercise, answerGiven, correctSolution});
+            //res.send({results, currentExercise, answerGiven, correctSolution});
+            res.send({"answer": "true"});
 
         });		
       }

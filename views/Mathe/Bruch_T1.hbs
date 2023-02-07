@@ -1,5 +1,29 @@
-<!--<a id="load" class="btn btn-light checkBtn" type="button" href="/getSheetStatus/1" style="display: none" id="n2">Nächste</a></p>-->
+<script type="text/javascript"></script>
+<script>
+    
+    function storeAnswer() {
+        //console.log(document.getElementById("a1").value);
 
+        $.ajax({
+        type: "POST",
+        url: "/storeAnswer/1/1",
+        data: {
+            "answer": document.getElementById('a1').value
+        },
+        success: function(data) {
+            if(data.answer) {
+                alert("success!")
+            } else {
+                alert("failed")
+            }
+        }
+    });
+        
+    }
+
+</script>
+
+<!--<a id="load" class="btn btn-light checkBtn" type="button" href="/getSheetStatus/1" style="display: none" id="n2">Nächste</a></p>-->
 <table id="bar">
     <tr>
         <td id="first"> </td>
@@ -15,19 +39,20 @@
 <br><br>
 <div class="main-container">
 
-    {{#ifEquals currentExercise undefined 1}}
+   {{#ifEquals currentExercise undefined 1}}
     <center>
-    <form action="/storeAnswer/1/1" method="post" id="ex1" class="lead">
+        
+    <!--<form id="ex1" action="/storeAnswer/1/1" method="post" class="lead">-->
         <p>Berechne</p>
         0,5 + 0,25 = 
         <input type="text" name="a1" id="a1" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
         <span role="alert" id="c1" style="display: none"></span>
         <br><br>
-        <p><button class="btn btn-light checkBtn" id="b1">Prüfen</button>
+        <p><button class="btn btn-light checkBtn" id="b1" onclick="storeAnswer()">Prüfen</button>
 
         <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a></p>
 
-    </form>
+    <!--</form>-->
     </center>
     {{/ifEquals}}
 
@@ -158,7 +183,8 @@
 <script type="text/javascript">
 
 
-    var input = document.getElementById("a" + {{currentExercise}});
+  
+   /* var input = document.getElementById("a" + {{currentExercise}});
     var btn = document.getElementById("b" + {{currentExercise}});
 
     var table_cell = document.getElementById("t" + {{currentExercise}});
@@ -168,7 +194,6 @@
 
     //document.getElementById("load").click();
 
-    console.log({{currentExercise}});
     for (var i = 0; i <= {{currentExercise}}; i++) {
             //tds[i].style.cssText = 'background-color: yellow';
             //tds[i].style.setProperty('background-color', 'yellow', 'important');
@@ -206,13 +231,17 @@
         correction.style.color = "grey";
         correction.innerHTML = "Leider falsch, probier es noch einmal.";*/
 
-        openModal();
+        /*openModal();
         table_cell.style.backgroundColor = "red";
 
-    }
+    }*/
 
 
-    var modal =  document.getElementById("myModal");
+
+
+    /*******      MODAL        *******/
+
+    /*var modal =  document.getElementById("myModal");
     // When the user clicks the button, open the modal 
     function openModal() {
        modal.style.display = "block";
@@ -226,7 +255,7 @@
         if (event.target == modal) {
             modal.style.display = "none";
         }
-    }
+    }*/
 
 
 
