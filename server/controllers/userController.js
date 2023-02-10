@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+var fs = require('fs');
 
 // Connection Pool
 let connection = mysql.createConnection({
@@ -251,18 +252,29 @@ exports.logout = (req, res) => {
 
 // display one sheet, for example Bruch_T1
 exports.displayOneSheet = (req, res) => {  
+
   if (req.session.loggedin) {
     //console.log(req.params.sheet_id);
     //connection.query('SELECT * FROM sheets s, results r WHERE s.sheet_id = r.sheet_id AND s.sheet_id = ? AND s.username = ?', [req.params.sheet_id, req.session.username], (err, results) => {
     connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], (err, results) => {
 
-      res.render(results[0].subject + '/' + results[0].name);
+
+      /* Load all the info for this sheet from the corresponding txt file */
+      fs.readFile( __dirname + '/../../views/' + results[0].subject + '/' + results[0].name+ '.txt', function (err, data) {
+        if (err) {
+          throw err; 
+        }
+
+        res.render(results[0].subject + '/' + results[0].name, {sheetInfo: data.toString()});
+      });
     });
- } else {
-   // Not logged in: please log in to view this page .....
-   res.render('login', {layout: 'loginLayout.hbs'});
- }
+  } else {
+    // Not logged in: please log in to view this page .....
+    res.render('login', {layout: 'loginLayout.hbs'});
+  }
 }
+
+
 
 
 // store answer is called every time the user clicks Prüfen 

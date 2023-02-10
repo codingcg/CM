@@ -1,4 +1,8 @@
-<p>{{sheetInfo}}</p>
+<!--<a id="load" class="btn btn-light checkBtn" type="button" href="/getSheetStatus/1" style="display: none" id="n2">Nächste</a></p>-->
+ <input type="button" value="test.txt"  onclick="loadFile()" />
+    <div id="main">
+    </div>
+
 <table id="bar">
     <tr>
         <td id="first"> </td>
@@ -129,7 +133,6 @@
     {{/ifEquals}}
 
     
- <p id="test"></p>
 
 
 
@@ -152,6 +155,7 @@
       <h3>Modal Footer</h3>
     </div>-->
   </div>
+
 </div>
 
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -165,15 +169,23 @@
     var checkBtn = document.getElementById('b1');
     var nextBtn = document.getElementById('n1');
 
-    var test = document.getElementById('test');
+    var reader = new XMLHttpRequest();
 
-    test.innerHTML +="Test";
-    //test.innerHTML +=String({sheetInfo});
+    function loadFile() {
+        reader.open('get', 'Bruch_T1.txt', true); 
+        reader.onreadystatechange = displayContents;
+        reader.send(null);
+    }
 
+    function displayContents() {
+        if(reader.readyState==4) {
+            var el = document.getElementById('main');
+            el.innerHTML = reader.responseText;
+        }
+    }
 
     /*********  FUNCTIONS ***********/
     
-
     function storeAnswer(currentExercise) {
         input = document.getElementById('a' + currentExercise);
         notes = document.getElementById('c' + currentExercise);
@@ -186,23 +198,22 @@
             data: {
                 "answerGiven": input.value.replace(",","."),
                 "currentExercise": currentExercise,
-            },
-            success: function(data) {
-                if (data.answerGiven == data.correctSolution) {
-                    // green ....
-                    input.value = String(data.answerGiven).replace(".",",");
-                    input.style.backgroundColor = "rgba(56, 170, 67, 0.5)";
-                    checkBtn.style.display = "none";
-                    nextBtn.style.display = "inline-block";
+        },
+        success: function(data) {
+            if (data.answerGiven == data.correctSolution) {
+                // green ....
+                input.value = String(data.answerGiven).replace(".",",");
+                input.style.backgroundColor = "rgba(56, 170, 67, 0.5)";
+                checkBtn.style.display = "none";
+                nextBtn.style.display = "inline-block";
 
-                } else {
-                    openModal();
+            } else {
+                openModal();
 
-                    //$('#c' + currentExercise).replaceWith(String(data.correctSolution).replace(".",","));
-                    //$('#tt').append(data.results[0].name);
-                }
+                //$('#c' + currentExercise).replaceWith(String(data.correctSolution).replace(".",","));
+                //$('#tt').append(data.results[0].name);
             }
-        });
+        }});
     }
 
     function openModal() {
@@ -250,5 +261,3 @@
         input.focus();
     }
 </script>
-
-
