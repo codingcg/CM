@@ -25,7 +25,7 @@ router.get('/displayOneSheet/:sheet_id', userController.displayOneSheet);
 
 // store sheet results in db
 router.post('/storeAnswer/:currentExercise/:sheet_id', userController.storeAnswer);
-router.get('/nextQuestion/:currentExercise/:sheet_id', userController.nextQuestion);
+router.post('/nextQuestion/:currentExercise/:sheet_id', userController.nextQuestion);
 
 
 router.get('/:id',userController.delete);

@@ -1,31 +1,48 @@
-<!--<div>Chapter stuff:</div>
-    <ul>{{#bar}}
-        <ol>{{@index}}: {{question}}</ol>
-        <ol>{{@index}}: {{exercise}}</ol>
-        <ol>{{@index}}: {{hint}}</ol>
-
-        {{/bar}}
-    </ul>-->
 <div class="main-container">
-   <!-- Current Exercise: {{currentExercise}}-->s
 
-{{#sheetData}}
-    {{#ifEquals currentExercise undefined 0}}
+    {{#sheetData}}
+    <div id="kkk{{@index}}">
         <center>
-            <p><b>Aufgabe {{@index}}:</b> {{question}}</p>
+            <p><b>Aufgabe {{@index}}:</b> {{{question}}}</p>
             <br>
-            {{exercise}}
-            <input type="text" name="a1" id="a1" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein." autocomplete="off"> 
+            {{{exercise}}}
+            <input type="text" name="a{{@index}}" id="a{{@index}}" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein." autocomplete="off"> 
             <br>
-            <span role="alert" id="c1" style="display: none; color: red"></span>
+            <span role="alert" id="c{{@index}}" style="display: none; color: red"></span>
             <br>
-            <button class="btn btn-secondary" id="b1" onclick="storeAnswer(1)">Prüfen</button>
+            <button class="btn btn-secondary" id="b{{@index}}" onclick="storeAnswer({{@index}})">Prüfen</button>
 
-            <a class="btn btn-success" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a>
+            <a class="btn btn-success" type="button" onclick="nextQuestion({{@index}})" style="display: none" id="n{{@index}}">Nächste</a>
         </center>
-    {{/ifEquals}}
-{{/sheetData}}
+    </div>
 
+
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Ups, leider falsch.</h2>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p><center>
+                <button type="button" class="btn" style="background-color:rgba(175, 57, 57, 0.5)" onclick="closeModal()"><i class="bi bi-arrow-clockwise"></i> &nbsp; Nochmal probieren</button>
+                <button type="button" class="btn" style="background-color:rgba(214, 189, 61, 0.5)" onclick="showHelp()"><i class="bi bi-question-diamond"></i> &nbsp;Hilfe</button>
+            </center></p>
+        </div>
+        <div class="modal-footer" style="display: none">
+            <h3>{{{hint}}}</h3>
+        </div>
+    </div>
+    </div>
+
+
+
+    {{/sheetData}}
+    </div>
 
 
 <br>
@@ -41,147 +58,9 @@
         <td id="last"> </td>
     </tr>
 </table>
-<br><br>
-
-   {{#ifEquals currentExercise undefined 1}}
-
-    <center>
-        <p>Berechne</p>
-        <br>
-        0,5 + 0,25 = 
-        <input type="text" name="a1" id="a1" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein." autocomplete="off"> 
-        <br>
-        <span role="alert" id="c1" style="display: none; color: red"></span>
-        <br>
-        <button class="btn btn-secondary" id="b1" onclick="storeAnswer(1)">Prüfen</button>
-
-        <a class="btn btn-success" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a>
-    </center>
-    {{/ifEquals}}
-
-    {{#ifEquals currentExercise 2 2}}
-    <center>
-    <form action="/storeAnswer/2/1" method="post" id="ex2" class="lead">
-        <p>Berechne</p>
-        5,1 - 3,5 =
-        <input type="text" name="a2" id="a2" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein.">
-        <span role="alert" id="c2" style="display: none"></span>
-        <br><br>
-        <button class="btn btn-light checkBtn" id="b2">Prüfen</button>
-        <a class="btn btn-success" type="button" href="/nextQuestion/2/1" style="display: none" id="n2">Nächste</a>
-    </form>
-    </center>
-    {{/ifEquals}}
-
-    {{#ifEquals currentExercise 3 3}}
-    <center>
-    <form action="/storeAnswer/3/1" method="post" id="ex3" class="lead">
-        <p>Berechne</p>
-        0,4 * 0,4 =
-        <input type="text" name="a3" id="a3" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
-        <span role="alert" id="c3" style="display: none"></span>
-        <br><br>
-        <p><button class="btn btn-light checkBtn" id="b3">Prüfen</button>
-        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/3/1" style="display: none" id="n3">Nächste</a></p>
-
-
-    </form>
-    </center>
-    {{/ifEquals}}
-    
-
-    {{#ifEquals currentExercise 4 4}}
-    <center>
-    <form action="/storeAnswer/4/1" method="post" id="ex4" class="lead">
-        <p>Trage die Dezimalzahl ein.</p>
-        1 <div class="frac">
-            <span>1</span><span class="s">/</span><span class="bo">2</span>
-        </div>
-        = 
-        <input type="text" name="a4" id="a4" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
-            <span role="alert" id="c4" style="display: none"></span>
-        </p>
-        <p><button class="btn btn-light checkBtn" id="b4">Prüfen</button>
-        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/4/1" style="display: none" id="n4">Nächste</a></p>
-    </form>
-    </center>
-    {{/ifEquals}}
-
-     {{#ifEquals currentExercise 5 5}}
-    <center>
-    <form action="/storeAnswer/5/1" method="post" id="ex5" class="lead">
-        <p>Trage die Dezimalzahl ein.</p>
-        3<div class="frac">
-            <span>4</span><span class="s">/</span><span class="bo">5</span>
-        </div>
-        = 
-        <input type="text" name="a5" id="a5" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
-            <span role="alert" id="c5" style="display: none"></span>
-        </p>
-        <p><button class="btn btn-light checkBtn" id="b5">Prüfen</button>
-        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/5/1" style="display: none" id="n5">Nächste</a></p>
-    </form>
-    </center>
-    {{/ifEquals}}
-
-     {{#ifEquals currentExercise 6 6}}
-    <center>
-    <form action="/storeAnswer/6/1" method="post" id="ex6" class="lead">
-        <p>Berechne </p>
-        0,5 + <div class="frac">
-            <span>1</span><span class="s">/</span><span class="bo">2</span>
-        </div>
-        = 
-        <input type="text" name="a6" id="a6" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
-            <span role="alert" id="c6" style="display: none"></span>
-        </p>
-        <p><button class="btn btn-light checkBtn" id="b6">Prüfen</button>
-        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/6/1" style="display: none" id="n6">Nächste</a></p>
-    </form>
-    </center>
-    {{/ifEquals}}
-
-    {{#ifEquals currentExercise 7 7}}
-    <center>
-    <form action="/storeAnswer/7/1" method="post" id="ex7" class="lead">
-        <p>Berechne </p>
-        1,25 + <div class="frac">
-            <span>1</span><span class="s">/</span><span class="bo">4</span>
-        </div>
-        = 
-        <input type="text" name="a7" id="a7" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein."> 
-            <span role="alert" id="c7" style="display: none"></span>
-        </p>
-        <p><button class="btn btn-light checkBtn" id="b7">Prüfen</button>
-        <a class="btn btn-light checkBtn" type="button" href="/nextQuestion/7/1" style="display: none" id="n7">Nächste</a></p>
-    </form>
-    </center>
-    {{/ifEquals}}
-
-    
 
 
 
-<!-- The Modal -->
-<div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <div class="modal-header">
-        <h2>Ups, leider falsch.</h2>
-        <span class="close">&times;</span>
-    </div>
-    <div class="modal-body">
-        <p><center>
-            <button type="button" class="btn" style="background-color:rgba(175, 57, 57, 0.5)" onclick="closeModal()"><i class="bi bi-arrow-clockwise"></i> &nbsp; Nochmal probieren</button>
-            <button type="button" class="btn" style="background-color:rgba(214, 189, 61, 0.5)"><i class="bi bi-question-diamond"></i> &nbsp;Hilfe</button>
-        </center></p>
-    </div>
-    <!--<div class="modal-footer">
-      <h3>Modal Footer</h3>
-    </div>-->
-  </div>
-</div>
 
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
@@ -189,15 +68,18 @@
     /******** ON PAGE LOAD DO .... **********/
 
     var modal =  document.getElementById("myModal");
-    var input = document.getElementById('a1');    
-    var notes = document.getElementById('c1');
-    var checkBtn = document.getElementById('b1');
-    var nextBtn = document.getElementById('n1');
+    var input = document.getElementById('a0');    
+    var notes = document.getElementById('c0');
+    var checkBtn = document.getElementById('b0');
+    var nextBtn = document.getElementById('n0');
+    var entered = false;
 
-    var test = document.getElementById('test');
-
-
+    /////// HARDCODED 6 !!!!!!! CHANGE
+    for (var i = 1; i < 6; i++) {
+        document.getElementById("kkk" + i).style.display = "none";
+    }
     /*********  FUNCTIONS ***********/
+    
 
     function storeAnswer(currentExercise) {
         input = document.getElementById('a' + currentExercise);
@@ -207,13 +89,14 @@
 
         $.ajax({
             type: "POST",
-            url: "/storeAnswer/1/1",
+            url: "/storeAnswer/" + currentExercise + "/1",
             data: {
                 "answerGiven": input.value.replace(",","."),
                 "currentExercise": currentExercise,
             },
             success: function(data) {
                 if (data.answerGiven == data.correctSolution) {
+
                     // green ....
                     input.value = String(data.answerGiven).replace(".",",");
                     input.style.backgroundColor = "rgba(56, 170, 67, 0.5)";
@@ -222,10 +105,24 @@
 
                 } else {
                     openModal();
-
                     //$('#c' + currentExercise).replaceWith(String(data.correctSolution).replace(".",","));
                     //$('#tt').append(data.results[0].name);
                 }
+            }
+        });
+    }
+
+    function nextQuestion(currentExercise) {
+        $.ajax({
+            type: "POST",
+            url: "/nextQuestion/" + currentExercise + "/1",
+            data: {
+                "currentExercise": currentExercise,
+            },
+            success: function(data) {
+                document.getElementById("kkk" + currentExercise).style.display = "none";
+                document.getElementById("kkk" + (currentExercise+1)).style.display = "block";
+                //document.getElementsByClassName('modal-footer')[0].style='none';
             }
         });
     }
@@ -235,14 +132,23 @@
     }
 
 
-
+    function showHelp() {
+        document.getElementsByClassName('modal-footer')[0].style='inline-block';
+    }
 
 
     /****** Event Listeners ****/
     input.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
-            event.preventDefault();
-            checkBtn.click(); 
+            if(!entered) {
+                event.preventDefault();
+                checkBtn.click(); 
+                entered = true;
+            } else {
+                event.preventDefault();
+                nextBtn.click(); 
+                entered = false;
+            }
         }
     });
 

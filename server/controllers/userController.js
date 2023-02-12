@@ -279,7 +279,8 @@ exports.displayOneSheet = (req, res) => {
             };
           sheetData[i] = foo;
         }
-        res.render(results[0].subject + '/' + results[0].name, {/*currentExercise: 0,*/ sheetData});
+        console.log(sheetData);
+        res.render(results[0].subject + '/' + results[0].name, {sheetData});
       });
     });
   } else {
@@ -373,7 +374,8 @@ exports.nextQuestion = (req, res) => {
   let currentExercise = req.params.currentExercise;
   currentExercise++;
   connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], function(error, results, fields) {
-    res.render(results[0].subject + '/' + results[0].name, {currentExercise});
+    //res.render(results[0].subject + '/' + results[0].name, {currentExercise});
+    res.send({currentExercise});
   });		
 }
 

@@ -29,7 +29,7 @@ Trage die Dezimalzahl ein.
 &&&
 3 
 <div class="frac">
-    <span> 4 /span>
+    <span> 4 </span>
     <span class="s"> / </span>
     <span class="bo"> 5 </span>
 </div> = 
