@@ -1,4 +1,27 @@
-<p>{{sheetInfo}}</p>
+<!--{{#each foo}}
+{{@index}}: {{.}}!
+{{/each}}-->
+{{#each foo}}
+{{@key}}:{{.}}!
+{{/each}}
+
+<hr>
+{{#each foo}}
+    <center>
+        <p>Aufgabe: {{@index}}:</p>
+        <br>
+        {{this.[5]}}        
+
+        <input type="text" name="a1" id="a1" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein." autocomplete="off"> 
+        <br>
+        <span role="alert" id="c1" style="display: none; color: red"></span>
+        <br>
+        <button class="btn btn-secondary" id="b1" onclick="storeAnswer(1)">Prüfen</button>
+
+        <a class="btn btn-success" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a>
+    </center>
+{{/each}}
+
 <table id="bar">
     <tr>
         <td id="first"> </td>
@@ -129,7 +152,6 @@
     {{/ifEquals}}
 
     
- <p id="test"></p>
 
 
 
@@ -166,9 +188,6 @@
     var nextBtn = document.getElementById('n1');
 
     var test = document.getElementById('test');
-
-    test.innerHTML +="Test";
-    //test.innerHTML +=String({sheetInfo});
 
 
     /*********  FUNCTIONS ***********/

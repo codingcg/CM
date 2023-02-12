@@ -265,7 +265,25 @@ exports.displayOneSheet = (req, res) => {
           throw err; 
         }
 
-        res.render(results[0].subject + '/' + results[0].name, {sheetInfo: data.toString()});
+        /* read question, exercises and hints*/
+        var splittedArray  = data.toString().split("%%%");
+        var questions = [], exercises = [], hints = [];
+
+        for (var i = 0; i < splittedArray.length; i++) {
+          var splittedTwice = splittedArray[i].split("&&&");
+
+          questions.push(splittedTwice[0].replace(undefined,''));
+          exercises.push(splittedTwice[1].replace(undefined,''));
+          hints.push(splittedTwice[2].replace(undefined,''));
+        }
+        console.log(questions);
+        console.log(exercises);
+        console.log(hints);
+
+        var foo = {questions: questions, exercises: exercises, hints: hints}
+
+        res.render(results[0].subject + '/' + results[0].name, {foo});
+        //res.render(results[0].subject + '/' + results[0].name, {questions: questions, exercises: exercises, hints: hints});
       });
     });
   } else {
