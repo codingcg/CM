@@ -1,27 +1,34 @@
-<!--{{#each foo}}
-{{@index}}: {{.}}!
-{{/each}}-->
-{{#each foo}}
-{{@key}}:{{.}}!
-{{/each}}
+<!--<div>Chapter stuff:</div>
+    <ul>{{#bar}}
+        <ol>{{@index}}: {{question}}</ol>
+        <ol>{{@index}}: {{exercise}}</ol>
+        <ol>{{@index}}: {{hint}}</ol>
 
-<hr>
-{{#each foo}}
-    <center>
-        <p>Aufgabe: {{@index}}:</p>
-        <br>
-        {{this.[5]}}        
+        {{/bar}}
+    </ul>-->
+<div class="main-container">
+   <!-- Current Exercise: {{currentExercise}}-->s
 
-        <input type="text" name="a1" id="a1" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein." autocomplete="off"> 
-        <br>
-        <span role="alert" id="c1" style="display: none; color: red"></span>
-        <br>
-        <button class="btn btn-secondary" id="b1" onclick="storeAnswer(1)">Prüfen</button>
+{{#sheetData}}
+    {{#ifEquals currentExercise undefined 0}}
+        <center>
+            <p><b>Aufgabe {{@index}}:</b> {{question}}</p>
+            <br>
+            {{exercise}}
+            <input type="text" name="a1" id="a1" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein." autocomplete="off"> 
+            <br>
+            <span role="alert" id="c1" style="display: none; color: red"></span>
+            <br>
+            <button class="btn btn-secondary" id="b1" onclick="storeAnswer(1)">Prüfen</button>
 
-        <a class="btn btn-success" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a>
-    </center>
-{{/each}}
+            <a class="btn btn-success" type="button" href="/nextQuestion/1/1" style="display: none" id="n1">Nächste</a>
+        </center>
+    {{/ifEquals}}
+{{/sheetData}}
 
+
+
+<br>
 <table id="bar">
     <tr>
         <td id="first"> </td>
@@ -35,9 +42,9 @@
     </tr>
 </table>
 <br><br>
-<div class="main-container">
 
    {{#ifEquals currentExercise undefined 1}}
+
     <center>
         <p>Berechne</p>
         <br>
@@ -191,7 +198,6 @@
 
 
     /*********  FUNCTIONS ***********/
-    
 
     function storeAnswer(currentExercise) {
         input = document.getElementById('a' + currentExercise);
