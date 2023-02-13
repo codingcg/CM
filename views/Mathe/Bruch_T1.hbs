@@ -1,39 +1,38 @@
 <div class="main-container">
 
     {{#sheetData}}
-    <div id="kkk{{@index}}">
+    <div id="exDivBox{{@index}}">
         <center>
             <p><b>Aufgabe {{@index}}:</b> {{{question}}}</p>
             <br>
             {{{exercise}}}
-            <input type="text" name="a{{@index}}" id="a{{@index}}" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein." autocomplete="off"> 
+            <input type="text" name="input{{@index}}" id="input{{@index}}" onfocus="this.value=''" autofocus required pattern="[0-9]+,?[0-9]*" title="Gib eine Dezimalzahl ein." autocomplete="off"> 
             <br>
-            <span role="alert" id="c{{@index}}" style="display: none; color: red"></span>
+            <span role="alert" id="correction{{@index}}" style="display: none; color: red"></span>
             <br>
-            <button class="btn btn-secondary" id="b{{@index}}" onclick="storeAnswer({{@index}})">Prüfen</button>
-
-            <a class="btn btn-success" type="button" onclick="nextQuestion({{@index}})" style="display: none" id="n{{@index}}">Nächste</a>
+            <button class="btn btn-secondary" id="checkBtn{{@index}}" onclick="storeAnswer({{@index}})">Prüfen</button>
+            <a class="btn btn-success" type="button" onclick="nextQuestion({{@index}})" style="display: none" id="nextBtn{{@index}}">Nächste</a>
         </center>
     </div>
 
 
 
     <!-- The Modal -->
-    <div id="myModal" class="modal">
+    <div id="myModal{{@index}}" class="modal">
 
     <!-- Modal content -->
     <div class="modal-content">
         <div class="modal-header">
             <h2>Ups, leider falsch.</h2>
-            <span class="close">&times;</span>
+            <span class="close" onclick="closeModal()">&times;</span>
         </div>
         <div class="modal-body">
             <p><center>
-                <button type="button" class="btn" style="background-color:rgba(175, 57, 57, 0.5)" onclick="closeModal()"><i class="bi bi-arrow-clockwise"></i> &nbsp; Nochmal probieren</button>
-                <button type="button" class="btn" style="background-color:rgba(214, 189, 61, 0.5)" onclick="showHelp()"><i class="bi bi-question-diamond"></i> &nbsp;Hilfe</button>
+                <button type="button" class="btn" style="background-color:rgba(175, 57, 57, 0.5)" onclick="closeModal({{@index}})"><i class="bi bi-arrow-clockwise"></i> &nbsp; Nochmal probieren</button>
+                <button type="button" class="btn" style="background-color:rgba(214, 189, 61, 0.5)" onclick="showHelp({{@index}})"><i class="bi bi-question-diamond"></i> &nbsp;Hilfe</button>
             </center></p>
         </div>
-        <div class="modal-footer" style="display: none">
+        <div class="modal-footer" id="modal-footer{{@index}}" style="display: none">
             <h3>{{{hint}}}</h3>
         </div>
     </div>
@@ -67,25 +66,28 @@
 
     /******** ON PAGE LOAD DO .... **********/
 
-    var modal =  document.getElementById("myModal");
-    var input = document.getElementById('a0');    
-    var notes = document.getElementById('c0');
-    var checkBtn = document.getElementById('b0');
-    var nextBtn = document.getElementById('n0');
+    /*var modal =  document.getElementById("myModal");
+    var input = document.getElementById('input0');    
+    var checkBtn = document.getElementById('checkBtn0');
+    var nextBtn = document.getElementById('nextBtn0');*/
     var entered = false;
+    var modalOpen = false;
+    var currentExercise_global = 0;
 
+    console.log(currentExercise_global);
     /////// HARDCODED 6 !!!!!!! CHANGE
     for (var i = 1; i < 6; i++) {
-        document.getElementById("kkk" + i).style.display = "none";
+        document.getElementById("exDivBox" + i).style.display = "none";
     }
     /*********  FUNCTIONS ***********/
     
 
     function storeAnswer(currentExercise) {
-        input = document.getElementById('a' + currentExercise);
-        notes = document.getElementById('c' + currentExercise);
-        checkBtn = document.getElementById("b" + currentExercise);
-        nextBtn = document.getElementById("n" + currentExercise);
+        var input = document.getElementById('input' + currentExercise);
+        var checkBtn = document.getElementById('checkBtn' + currentExercise);
+        var nextBtn = document.getElementById('nextBtn' + currentExercise);
+
+        currentExercise_global = currentExercise;
 
         $.ajax({
             type: "POST",
@@ -102,9 +104,9 @@
                     input.style.backgroundColor = "rgba(56, 170, 67, 0.5)";
                     checkBtn.style.display = "none";
                     nextBtn.style.display = "inline-block";
-
+                    entered = true;
                 } else {
-                    openModal();
+                    openModal(document.getElementById('myModal' +  currentExercise));
                     //$('#c' + currentExercise).replaceWith(String(data.correctSolution).replace(".",","));
                     //$('#tt').append(data.results[0].name);
                 }
@@ -120,63 +122,65 @@
                 "currentExercise": currentExercise,
             },
             success: function(data) {
-                document.getElementById("kkk" + currentExercise).style.display = "none";
-                document.getElementById("kkk" + (currentExercise+1)).style.display = "block";
-                //document.getElementsByClassName('modal-footer')[0].style='none';
+
+                currentExercise_global = currentExercise + 1;
+
+                document.getElementById("exDivBox" + currentExercise).style.display = "none";
+                document.getElementById("exDivBox" + currentExercise_global).style.display = "block";
+                document.getElementsByClassName('modal-footer')[0].style.display ='none';
+
+                document.getElementById("input" + currentExercise_global).focus();
+                entered = false;
             }
         });
     }
 
-    function openModal() {
-       modal.style.display = "block";
+    function openModal(modal) {
+        modal.style.display = "block";
+        modal.focus();
+        modalOpen = true;
     }
 
 
-    function showHelp() {
-        document.getElementsByClassName('modal-footer')[0].style='inline-block';
+    function showHelp(currentExercise) {
+        document.getElementById('modal-footer'+currentExercise).style='inline-block';
+        modalOpen = true;
+    }
+    
+    function actOnEnterKey() {
+        if (event.key === "Enter") {
+            if (modalOpen) {
+                closeModal();
+            } else {
+                if(!entered) {
+                    document.getElementById("checkBtn" + currentExercise_global).click(); 
+                } else {
+                    document.getElementById("nextBtn" + currentExercise_global).click(); 
+                }
+            }
+        } 
     }
 
 
     /****** Event Listeners ****/
-    input.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            if(!entered) {
-                event.preventDefault();
-                checkBtn.click(); 
-                entered = true;
-            } else {
-                event.preventDefault();
-                nextBtn.click(); 
-                entered = false;
-            }
-        }
+    window.addEventListener("keypress", function(event) {
+        actOnEnterKey();
     });
 
 
-    // When the user clicks on <span> (x), close the modal
-    document.getElementsByClassName("close")[0].onclick = function() {
-        closeModal();
-    }
+
+
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
-        if (event.target == modal) {
+        if (event.target == document.getElementById("myModal" + currentExercise_global)) {
             closeModal();
         }
     }
 
-    window.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            //alert(document.querySelectorAll('.modal.in').length > 0);
-            event.preventDefault();
-            closeModal();
-        }
-    });
-   
-
-
     function closeModal() {
-        modal.style.display = "none";
-        //notes.style.display = "none";
+        document.getElementById("myModal" + currentExercise_global).style.display = "none";
+        modalOpen = false;
+        var input = document.getElementById("input" + currentExercise_global);
         input.value = "";
         input.focus();
     }
