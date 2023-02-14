@@ -89,6 +89,10 @@
                     checkBtn.style.display = "none";
                     nextBtn.style.display = "inline-block";
                     entered = true;
+
+                    if (currentExercise_global+1 == data.numberOfExercises) {
+                        nextBtn.innerHTML = "Arbeitsblatt abgeben";
+                    }
                 } else {
                     openModal(document.getElementById('myModal' +  currentExercise));
                     //$('#c' + currentExercise).replaceWith(String(data.correctSolution).replace(".",","));
@@ -106,47 +110,53 @@
                 "currentExercise": currentExercise,
             },
             success: function(data) {
-                currentExercise_global = currentExercise + 1;
-                document.getElementById("exDivBox" + currentExercise).style.display = "none";
-                document.getElementById("exDivBox" + currentExercise_global).style.display = "block";
-                document.getElementsByClassName('modal-footer')[0].style.display ='none';
-                document.getElementById("input" + currentExercise_global).focus();
-                entered = false;
 
-                //console.log(data.numberOfExercises);
-                myPoints_global = [];
-                $.each(data.results[0], function(index, element) {
-                    if(/^[p]/.test(index)) {
-                        myPoints_global.push(element);
-                    }
-                });
-                for (var i = 0; i < myPoints_global.length; i++) {
-                    if (i < currentExercise_global) {
-                        if (myPoints_global[i]) {
-                            if (i==0) {
-                                bar.innerHTML += "<td class='greenCell' id='first'></td>";
-                            } else if (i== myPoints_global.length-1) {
-                                bar.innerHTML += "<td class='greenCell' id='last'></td>";
+                if (currentExercise_global+1 != data.numberOfExercises) {
+                    console.log("Test");
+                        
+                    currentExercise_global = currentExercise + 1;
+
+                    document.getElementById("exDivBox" + currentExercise).style.display = "none";
+                    document.getElementById("exDivBox" + currentExercise_global).style.display = "block";
+                    document.getElementsByClassName('modal-footer')[0].style.display ='none';
+                    document.getElementById("input" + currentExercise_global).focus();
+                    entered = false;
+
+                    //console.log(data.numberOfExercises);
+                    myPoints_global = [];
+                    $.each(data.results[0], function(index, element) {
+                        if(/^[p]/.test(index)) {
+                            myPoints_global.push(element);
+                        }
+                    });
+                    for (var i = 0; i < myPoints_global.length; i++) {
+                        if (i < currentExercise_global) {
+                            if (myPoints_global[i]) {
+                                if (i==0) {
+                                    bar.innerHTML += "<td class='greenCell' id='first'></td>";
+                                } else if (i== myPoints_global.length-1) {
+                                    bar.innerHTML += "<td class='greenCell' id='last'></td>";
+                                } else {
+                                    bar.innerHTML += "<td class='greenCell'></td>";
+                                }
                             } else {
-                                bar.innerHTML += "<td class='greenCell'></td>";
+                                if (i==0) {
+                                    bar.innerHTML += "<td class='redCell' id='first'></td>";
+                                } else if (i== myPoints_global.length-1) {
+                                    bar.innerHTML += "<td class='redCell' id='last'></td>";
+                                } else {
+                                    bar.innerHTML += "<td class='redCell'></td>";
+                                }
                             }
                         } else {
                             if (i==0) {
-                                bar.innerHTML += "<td class='redCell' id='first'></td>";
-                            } else if (i== myPoints_global.length-1) {
-                                bar.innerHTML += "<td class='redCell' id='last'></td>";
-                            } else {
-                                bar.innerHTML += "<td class='redCell'></td>";
-                            }
+                                    bar.innerHTML += "<td class='greyCell' id='first'></td>";
+                                } else if (i== myPoints_global.length-1) {
+                                    bar.innerHTML += "<td class='greyCell' id='last'></td>";
+                                } else {
+                                    bar.innerHTML += "<td class='greyCell'></td>";
+                                }
                         }
-                    } else {
-                        if (i==0) {
-                                bar.innerHTML += "<td class='greyCell' id='first'></td>";
-                            } else if (i== myPoints_global.length-1) {
-                                bar.innerHTML += "<td class='greyCell' id='last'></td>";
-                            } else {
-                                bar.innerHTML += "<td class='greyCell'></td>";
-                            }
                     }
                 }
             }

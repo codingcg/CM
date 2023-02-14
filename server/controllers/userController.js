@@ -301,6 +301,8 @@ exports.storeAnswer = (req, res) => {
   let currentExercise = req.body.currentExercise;
   let answerGiven = parseFloat(req.body.answerGiven.replace(",", "."));
 
+  var numberOfExercises = Object.keys(sheet).length;
+
   // continue only if the user entered a float number which is in correct format
   if(/^\d{1,2}(\.\d{0,2})?$|^\.\d\d?$/.test(answerGiven)) {
 
@@ -324,7 +326,7 @@ exports.storeAnswer = (req, res) => {
 
             // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
             // but for the send command I need ajax and can use this in js but not in html/handlebars
-            res.send({results, answerGiven, correctSolution});
+            res.send({results, answerGiven, correctSolution, numberOfExercises});
         });		
       }
   } else {
