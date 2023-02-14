@@ -4,7 +4,7 @@ const session = require('express-session');
 
 require('dotenv').config();
 
-const app = express();
+app = express();
 const port = process.env.PORT || 5000;
 
 app.use(session({
@@ -41,6 +41,9 @@ handlebars.handlebars.registerHelper('ifEqual', function(arg1, arg2, options) {
 handlebars.handlebars.registerHelper('ifNotEqual', function(arg1, arg2, options) {
     return (arg1 != arg2) ? options.fn(this) : options.inverse(this);
 });
+
+
+//app.locals.info = 42;
 
 
 

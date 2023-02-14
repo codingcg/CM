@@ -2,14 +2,7 @@
 <center>
     <table>
         <tr id="bar">
-            <!--<td id="first"> </td>
 
-            <td id="t1">  </td>
-            <td id="t2">  </td>
-            <td id="t3">  </td>
-            <td id="t4">  </td>
-
-            <td id="last"> </td>-->
         </tr>
     </table>
 </center>
@@ -67,8 +60,8 @@
     var entered = false;
     var modalOpen = false;
     var currentExercise_global = 0;
-    console.log(currentExercise_global);
     var myPoints_global = [];
+    var bar = document.getElementById("bar");
 
     /////// HARDCODED 6 !!!!!!! CHANGE
     for (var i = 1; i < 6; i++) {
@@ -105,6 +98,7 @@
         });
     }
     function nextQuestion(currentExercise) {
+        bar.innerHTML = "";
         $.ajax({
             type: "POST",
             url: "/nextQuestion/" + currentExercise + "/1",
@@ -119,28 +113,24 @@
                 document.getElementById("input" + currentExercise_global).focus();
                 entered = false;
 
-
-                var c = 0
+                //console.log(data.numberOfExercises);
+                myPoints_global = [];
                 $.each(data.results[0], function(index, element) {
-                    var bar = document.getElementById("bar");
                     if(/^[p]/.test(index)) {
-
                         myPoints_global.push(element);
-
-                        if( c <= currentExercise_global + 1) {
-                            if (element == 1) {
-                                bar.innerHTML += "<td class='greenCell'></td>";
-                            } else if (element == 0) {
-                                bar.innerHTML += "<td class='redCell'></td>";
-                            } else {
-                                bar.innerHTML += "<td class='organgeCell'></td>";
-                            }
-                        }  else {
-                            bar.innerHTML += "<td class='greyCell'></td>";
-                        } 
-                        c++;
                     }
                 });
+                for (var i = 0; i < myPoints_global.length; i++) {
+                    if (i < currentExercise_global) {
+                        if (myPoints_global[i]) {
+                            bar.innerHTML += "<td class='greenCell'></td>";
+                        } else {
+                            bar.innerHTML += "<td class='redCell'></td>";
+                        }
+                    } else {
+                        bar.innerHTML += "<td class='greyCell'></td>";
+                    }
+                }
             }
         });
     }

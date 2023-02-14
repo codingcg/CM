@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 var fs = require('fs');
 
+
 // Connection Pool
 let connection = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -250,20 +251,19 @@ exports.logout = (req, res) => {
 }
 
 
-// display one sheet, for example Bruch_T1
 exports.displayOneSheet = (req, res) => {  
   var sheetData = [];
   if (req.session.loggedin) {
       connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], (err, results) => {
 
 
-      /* Load all the info for this sheet from the corresponding txt file */
+      // Load all the info for this sheet from the corresponding txt file 
       fs.readFile( __dirname + '/../../views/' + results[0].subject + '/' + results[0].name+ '.txt', function (err, data) {
         if (err) {
           throw err; 
         }
 
-        /********** read question, exercises, solutions, points and hints **********/
+        // read question, exercises, solutions, points and hints
         var splittedArray  = data.toString().split("***************");
         sheetData = new Array(splittedArray.length);
 
@@ -279,10 +279,13 @@ exports.displayOneSheet = (req, res) => {
             };
           sheetData[i] = foo;
         }
+        
+        // make sheet Variable global and construct a complete clone of sheetData in it to access txt file data it in other routes
+        sheet = Object.assign({}, sheetData);
 
         // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
         // but for the send command I need ajax and can use this in js but not in html/handlebars
-        res.render(results[0].subject + '/' + results[0].name, {sheetData});
+        res.render(results[0].subject + '/' + results[0].name, {sheetData, sheet});
       });
     });
   } else {
@@ -292,19 +295,20 @@ exports.displayOneSheet = (req, res) => {
 }
 
 
+
 exports.storeAnswer = (req, res) => {
   //let currentExercise = req.params.currentExercise;
   let currentExercise = req.body.currentExercise;
-  let answerGiven = req.body.answerGiven.replace(",", ".");
+  let answerGiven = parseFloat(req.body.answerGiven.replace(",", "."));
 
   // continue only if the user entered a float number which is in correct format
   if(/^\d{1,2}(\.\d{0,2})?$|^\.\d\d?$/.test(answerGiven)) {
 
       if (answerGiven) {
         connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], function(error, results, fields) {
-
-            let correctSolution = results[0]['lsg' + currentExercise];
-            let pointsForThisExercise = (correctSolution == answerGiven)? results[0]['p' + currentExercise]: 0;
+           
+            let correctSolution = parseFloat(sheet[currentExercise].solution);
+            let pointsForThisExercise = (correctSolution == answerGiven)? parseFloat(sheet[currentExercise].points): 0;
         
             var tmp = "ans" + currentExercise;
             // check if the column exists in the database
@@ -326,10 +330,12 @@ exports.storeAnswer = (req, res) => {
   } else {
       //res.send({"wrong": "Falsches Format"});
   }
-
 }
 
 exports.nextQuestion = (req, res) => {
+
+  var numberOfExercises = Object.keys(sheet).length;
+
   let currentExercise = req.params.currentExercise;
   currentExercise++;
   connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], function(error, results, fields) {
@@ -339,7 +345,7 @@ exports.nextQuestion = (req, res) => {
 
         // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
         // but for the send command I need ajax and can use this in js but not in html/handlebars
-        res.send({currentExercise, results});
+        res.send({currentExercise, results, numberOfExercises});
 
       });
   });		
