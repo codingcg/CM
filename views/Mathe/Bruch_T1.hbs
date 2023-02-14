@@ -123,12 +123,30 @@
                 for (var i = 0; i < myPoints_global.length; i++) {
                     if (i < currentExercise_global) {
                         if (myPoints_global[i]) {
-                            bar.innerHTML += "<td class='greenCell'></td>";
+                            if (i==0) {
+                                bar.innerHTML += "<td class='greenCell' id='first'></td>";
+                            } else if (i== myPoints_global.length-1) {
+                                bar.innerHTML += "<td class='greenCell' id='last'></td>";
+                            } else {
+                                bar.innerHTML += "<td class='greenCell'></td>";
+                            }
                         } else {
-                            bar.innerHTML += "<td class='redCell'></td>";
+                            if (i==0) {
+                                bar.innerHTML += "<td class='redCell' id='first'></td>";
+                            } else if (i== myPoints_global.length-1) {
+                                bar.innerHTML += "<td class='redCell' id='last'></td>";
+                            } else {
+                                bar.innerHTML += "<td class='redCell'></td>";
+                            }
                         }
                     } else {
-                        bar.innerHTML += "<td class='greyCell'></td>";
+                        if (i==0) {
+                                bar.innerHTML += "<td class='greyCell' id='first'></td>";
+                            } else if (i== myPoints_global.length-1) {
+                                bar.innerHTML += "<td class='greyCell' id='last'></td>";
+                            } else {
+                                bar.innerHTML += "<td class='greyCell'></td>";
+                            }
                     }
                 }
             }
