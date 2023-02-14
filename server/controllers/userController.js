@@ -252,7 +252,7 @@ exports.logout = (req, res) => {
 
 // display one sheet, for example Bruch_T1
 exports.displayOneSheet = (req, res) => {  
-
+  var sheetData = [];
   if (req.session.loggedin) {
       connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], (err, results) => {
 
@@ -263,9 +263,9 @@ exports.displayOneSheet = (req, res) => {
           throw err; 
         }
 
-        /* read question, exercises and hints*/
-        var splittedArray  = data.toString().split("%%%");
-        var sheetData = new Array(splittedArray.length);
+        /********** read question, exercises, solutions, points and hints **********/
+        var splittedArray  = data.toString().split("***************");
+        sheetData = new Array(splittedArray.length);
 
         for (var i = 0; i < splittedArray.length; i++) {
           var splittedTwice = splittedArray[i].split("&&&");
@@ -273,10 +273,13 @@ exports.displayOneSheet = (req, res) => {
           var foo = {
                 "question" : splittedTwice[0].replace(undefined,''),
                 "exercise" : splittedTwice[1].replace(undefined,''),
-                "hint" : splittedTwice[2].replace(undefined,'')
+                "solution" : splittedTwice[2].replace(undefined,'').replace(",", "."),
+                "points" : splittedTwice[3].replace(undefined,''),
+                "hint" : splittedTwice[4].replace(undefined,'')
             };
           sheetData[i] = foo;
         }
+
         // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
         // but for the send command I need ajax and can use this in js but not in html/handlebars
         res.render(results[0].subject + '/' + results[0].name, {sheetData});
