@@ -28,7 +28,9 @@ exports.view = (req, res) => {
         if (!err) {
           let removedUser = req.query.removed;
           let username = req.session.username;
-          res.render('sus', { rows, removedUser, username });
+          var admin = req.session.admin;
+
+          res.render('sus', { rows, removedUser, username, admin});
         } else {
           console.log(err);
         }
