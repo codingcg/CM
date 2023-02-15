@@ -1,5 +1,5 @@
 <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item"><a href="/overview">Home</a></li>
     <li class="breadcrumb-item active" aria-current="page">Übersicht</li>
 </ol>
 
@@ -15,10 +15,11 @@
       <th scope="col">Punkte</th>
     </tr>
   </thead>-->
-  <tbody>
+  <!--<tbody>
 
-    {{#each results}}
+    {{#each rows}}
     <tr>
+      {{this.number_of_exercises}}
       <td>{{this.username}}</td>
       {{#ifEqual this.p1 0}} <td class="redCell">{{this.p1}}</td> {{/ifEqual}}
       {{#ifNotEqual this.p1 0}} <td class="greenCell">{{this.p1}}</td> {{/ifNotEqual}}
@@ -29,6 +30,34 @@
       {{#ifEqual this.reached_points 4}} <td class="redCell">{{this.reached_points}}</td> {{/ifEqual}}
       {{#ifNotEqual this.reached_points 4}} <td class="greenCell">{{this.reached_points}}</td> {{/ifNotEqual}}
 
+    </tr>
+    {{/each}}
+
+  </tbody>-->
+
+
+
+  <tbody>
+
+    {{#each rows}}
+    <tr>
+        <td>{{this.username}}</td>
+
+          {{#each this}}
+            {{#contains 'p' @key }}
+              {{#ifEqual this 0}} <td class="redCell">{{this}}</td> {{/ifEqual}}
+              {{#ifNotEqual this 0}} <td class="greenCell">{{this}}</td> {{/ifNotEqual}}
+            {{/contains}}
+          {{/each}}
+         
+       
+          <!--{{#ifEqual c 0}} <td class="redCell">{{c}}</td> {{/ifEqual}}
+          {{#ifNotEqual c 0}} <td class="greenCell">{{c}}</td> {{/ifNotEqual}}
+   <p label="{{@key}}">
+          {{#each this}}
+              <p value="{{id}}">{{name}}</p>
+          {{/each}}
+          </p>-->
     </tr>
     {{/each}}
 

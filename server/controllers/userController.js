@@ -20,7 +20,7 @@ exports.home = (req, res) => {
 exports.view = (req, res) => {
 
     // If the user is loggedin
-    if (req.session.loggedin && req.session.admin) {
+    if (req.session.loggedin /*&& req.session.admin*/) {
       
       // User the connection
       connection.query('SELECT * FROM user WHERE status = "active"', (err, rows) => {
@@ -284,7 +284,7 @@ exports.displayOneSheet = (req, res) => {
           sheetData[i] = foo;
         }
         
-        connection.query('UPDATE sheets SET max_points = ?', [max_points]);
+        connection.query('UPDATE sheets SET max_points = ?, number_of_exercises = ?', [max_points, splittedArray.length]);
 
         // make sheet Variable global and construct a complete clone of sheetData in it to access txt file data it in other routes
         sheet = Object.assign({}, sheetData);
@@ -307,9 +307,9 @@ exports.storeAnswer = (req, res) => {
   let currentExercise = req.body.currentExercise;
   let answerGiven = parseFloat(req.body.answerGiven.replace(",", "."));
 
-  var numberOfExercises = Object.keys(sheet).length;
+  var number_of_exercises = Object.keys(sheet).length;
   let reached_points = 0;
-  let pointsForThisExercise = 0;
+  let points_for_this_exercise = 0;
 
   // continue only if the user entered a float number which is in correct format
   if(/^\d{1,2}(\.\d{0,2})?$|^\.\d\d?$/.test(answerGiven)) {
@@ -322,15 +322,15 @@ exports.storeAnswer = (req, res) => {
 
             // given answer is right
             if (correctSolution == answerGiven){
-              pointsForThisExercise = parseFloat(sheet[currentExercise].points);
+              points_for_this_exercise = parseFloat(sheet[currentExercise].points);
 
             // given answer is wrong
             } else {
-              pointsForThisExercise = 0;
+              points_for_this_exercise = 0;
             }
 
             connection.query('SELECT * FROM results WHERE sheet_id = ? AND username = ?', [req.params.sheet_id, req.session.username], function(error, rows, fields) {
-              reached_points = parseInt(rows[0].reached_points) + pointsForThisExercise;
+              reached_points = parseInt(rows[0].reached_points) + points_for_this_exercise;
               console.log("ONE");
               console.log(rows[0].reached_points);
               console.log("TWO");
@@ -338,7 +338,7 @@ exports.storeAnswer = (req, res) => {
 
             });
             console.log("POINTS");
-              console.log(pointsForThisExercise);
+              console.log(points_for_this_exercise);
               
             var tmp = "ans" + currentExercise;
             // check if the column exists in the database
@@ -352,12 +352,12 @@ exports.storeAnswer = (req, res) => {
             });
            
             // now add the user input to the new or existing column
-            connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ?, reached_points =  ? WHERE sheet_id = ? AND username = ?', [answerGiven, pointsForThisExercise, reached_points, req.params.sheet_id, req.session.username]);
+            connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ?, reached_points =  ?, number_of_exercises = ? WHERE sheet_id = ? AND username = ?', [answerGiven, points_for_this_exercise, reached_points, number_of_exercises, req.params.sheet_id, req.session.username]);
             console.log("Three");
             console.log(reached_points);
             // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
             // but for the send command I need ajax and can use this in js but not in html/handlebars
-            res.send({results, answerGiven, correctSolution, numberOfExercises});
+            res.send({results, answerGiven, correctSolution, number_of_exercises});
           
         });		
       }
@@ -392,11 +392,11 @@ exports.nextQuestion = (req, res) => {
 exports.overview = (req, res) => {
   if (req.session.loggedin /*&& req.session.admin*/) {
     
-    connection.query('SELECT * FROM results WHERE sheet_id = ?', [1], function(error, results) {
+    connection.query('SELECT * FROM results WHERE sheet_id = ?', [1], function(error, rows) {
       if (!error) {
         //console.log(results);
         var admin = req.session.admin;
-        res.render('overview', {results, admin});
+        res.render('overview', {rows, admin});
       } else {
         console.log(error);
       }

@@ -41,8 +41,24 @@ handlebars.handlebars.registerHelper('ifEqual', function(arg1, arg2, options) {
 handlebars.handlebars.registerHelper('ifNotEqual', function(arg1, arg2, options) {
     return (arg1 != arg2) ? options.fn(this) : options.inverse(this);
 });
-
-
+handlebars.handlebars.registerHelper('contains', function(needle, haystack, options) {
+    needle = handlebars.handlebars.escapeExpression(needle);
+    haystack = handlebars.handlebars.escapeExpression(haystack);
+    return (haystack.indexOf(needle) > -1) ? options.fn(this) : options.inverse(this);
+ });
+/*handlebars.handlebars.registerHelper('times', function(n, block) {
+    var accum = '';
+    for(var i = 0; i < n; ++i)
+        accum += block.fn(i);
+    return accum;
+});
+handlebars.handlebars.registerHelper("setVar", function(varName, varValue, options) {
+  options.data.root[varName] = varValue;
+});
+handlebars.handlebars.registerHelper('concat', function() {
+    arguments = [...arguments].slice(0, -1);
+    return arguments.join('');
+});*/
 //app.locals.info = 42;
 
 
