@@ -310,7 +310,6 @@ exports.storeAnswer = (req, res) => {
   let answerGiven = parseFloat(req.body.answerGiven.replace(",", "."));
 
   var number_of_exercises = Object.keys(sheet).length;
-  let reached_points = 0;
   let points_for_this_exercise = 0;
 
   // continue only if the user entered a float number which is in correct format
@@ -330,18 +329,12 @@ exports.storeAnswer = (req, res) => {
             } else {
               points_for_this_exercise = 0;
             }
-
-            connection.query('SELECT * FROM results WHERE sheet_id = ? AND username = ?', [req.params.sheet_id, req.session.username], function(error, rows, fields) {
-              reached_points = parseInt(rows[0].reached_points) + points_for_this_exercise;
-              console.log("ONE");
-              console.log(rows[0].reached_points);
-              console.log("TWO");
-              console.log(reached_points);
-
-            });
-            console.log("POINTS");
-              console.log(points_for_this_exercise);
               
+            connection.query('SELECT * FROM results WHERE sheet_id = ? AND username = ?', [req.params.sheet_id, req.session.username], function(error, rows, fields) {
+              // reached_points is a global variable -- dangerous maybe?
+              reached_points = parseInt(rows[0].reached_points) + points_for_this_exercise;
+            });
+
             var tmp = "ans" + currentExercise;
             // check if the column exists in the database
             connection.query('SELECT COUNT(*) AS count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = "results" AND COLUMN_NAME = ?', [tmp], function(error, results, fields) {
@@ -350,13 +343,13 @@ exports.storeAnswer = (req, res) => {
                 //if it doesn't exist, add it
                 connection.query('ALTER TABLE results ADD COLUMN ans'+currentExercise+' float(1) NOT NULL DEFAULT 0, ADD COLUMN p'+currentExercise+' float(1) NOT NULL DEFAULT 0');
               }
-              console.log("Test");
+
+              
             });
            
             // now add the user input to the new or existing column
-            connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ?, reached_points =  ?, number_of_exercises = ? WHERE sheet_id = ? AND username = ?', [answerGiven, points_for_this_exercise, reached_points, number_of_exercises, req.params.sheet_id, req.session.username]);
-            console.log("Three");
-            console.log(reached_points);
+            connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ?, number_of_exercises = ? WHERE sheet_id = ? AND username = ?', [answerGiven, points_for_this_exercise, number_of_exercises, req.params.sheet_id, req.session.username]);
+
             // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
             // but for the send command I need ajax and can use this in js but not in html/handlebars
             res.send({results, answerGiven, correctSolution, number_of_exercises});
@@ -370,10 +363,12 @@ exports.storeAnswer = (req, res) => {
 
 exports.nextQuestion = (req, res) => {
 
-  var numberOfExercises = Object.keys(sheet).length;
+  connection.query('UPDATE results SET reached_points = ? WHERE sheet_id = ? AND username = ?', [reached_points, req.params.sheet_id, req.session.username]);
 
+  var numberOfExercises = Object.keys(sheet).length;
   let currentExercise = req.params.currentExercise;
   currentExercise++;
+
   connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], function(error, results, fields) {
 
       // get all the user results for this sheet up to this point, to display it in the progress bar
