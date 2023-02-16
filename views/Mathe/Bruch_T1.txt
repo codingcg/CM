@@ -7,6 +7,8 @@ Berechne
 1
 &&&
 Notiere die beiden Zahlen untereinander. Addiere dann schriftlich.
+&&&
+Achte darauf das Komma untereinander zu notieren. Füge 0,5 eine gedachte Null hinzu.
 ***************
 Berechne
 &&&
@@ -35,7 +37,6 @@ Trage die Dezimalzahl ein.
 Stelle dir drei ganze und einen halben Kuchen vor. 
 &&&
 Ein halber Kuchen entspricht 0,5 Kuchen.
-&&&
 ***************
 Trage die Dezimalzahl ein.
 &&&

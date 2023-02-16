@@ -279,7 +279,11 @@ exports.displayOneSheet = (req, res) => {
                 "exercise" : splittedTwice[1].replace(undefined,''),
                 "solution" : splittedTwice[2].replace(undefined,'').replace(",", "."),
                 "points" : splittedTwice[3].replace(undefined,''),
-                "hint" : splittedTwice[4].replace(undefined,'')
+                "hint1" : splittedTwice.length > 4 ? splittedTwice[4].replace(undefined,''): "Kein Tip verfügbar",
+                "hint2" : splittedTwice.length > 5 ? splittedTwice[5].replace(undefined,''): "Kein Tip verfügbar",
+                "hint3" : splittedTwice.length > 6 ? splittedTwice[6].replace(undefined,''): "Kein Tip verfügbar",
+                "hint4" : splittedTwice.length > 7 ? splittedTwice[7].replace(undefined,''): "Kein Tip verfügbar",
+                "hint5" : splittedTwice.length > 8 ? splittedTwice[8].replace(undefined,''): "Kein Tip verfügbar",
           };
 
           max_points += parseFloat(splittedTwice[3].replace(undefined,''));
@@ -308,6 +312,7 @@ exports.storeAnswer = (req, res) => {
   //let currentExercise = req.params.currentExercise;
   let currentExercise = req.body.currentExercise;
   let answerGiven = parseFloat(req.body.answerGiven.replace(",", "."));
+  let tries = req.body.tries;
 
   var number_of_exercises = Object.keys(sheet).length;
   let points_for_this_exercise = 0;
@@ -323,8 +328,11 @@ exports.storeAnswer = (req, res) => {
 
             // given answer is right
             if (correctSolution == answerGiven){
-              points_for_this_exercise = parseFloat(sheet[currentExercise].points);
-
+              if (tries == 1){
+                points_for_this_exercise = parseFloat(sheet[currentExercise].points);
+              } else if (tries == 2) {
+                points_for_this_exercise = parseFloat(sheet[currentExercise].points * 0.5);
+              } 
             // given answer is wrong
             } else {
               points_for_this_exercise = 0;
@@ -335,18 +343,22 @@ exports.storeAnswer = (req, res) => {
               reached_points = parseInt(rows[0].reached_points) + points_for_this_exercise;
             });
 
-            var tmp = "ans" + currentExercise;
             // check if the column exists in the database
-            connection.query('SELECT COUNT(*) AS count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = "results" AND COLUMN_NAME = ?', [tmp], function(error, results, fields) {
+            /*connection.query('SELECT COUNT(*) AS count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = "results" AND COLUMN_NAME = ?', [tmp], function(error, results, fields) {
               //console.log(results[0].count);
               if (results[0].count == 0) {
                 //if it doesn't exist, add it
                 connection.query('ALTER TABLE results ADD COLUMN ans'+currentExercise+' float(1) NOT NULL DEFAULT 0, ADD COLUMN p'+currentExercise+' float(1) NOT NULL DEFAULT 0');
-              }
-
-              
+              } 
             });
-           
+            // now add the user input to the new or existing column
+            connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ?, number_of_exercises = ? WHERE sheet_id = ? AND username = ?', [answerGiven, points_for_this_exercise, number_of_exercises, req.params.sheet_id, req.session.username]);
+            */
+
+            var tmp = "ans" + currentExercise;
+            // check if the column exists in the database, if it doesn't exist, add it
+            connection.query('IF NOT EXISTS( SELECT NULL FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = "results" AND COLUMN_NAME = ?) THEN ALTER TABLE results ADD COLUMN ans'+currentExercise+' float(1) NOT NULL DEFAULT 0, ADD COLUMN p'+currentExercise+' float(1) NOT NULL DEFAULT 0; END IF', [tmp]);
+
             // now add the user input to the new or existing column
             connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ?, number_of_exercises = ? WHERE sheet_id = ? AND username = ?', [answerGiven, points_for_this_exercise, number_of_exercises, req.params.sheet_id, req.session.username]);
 

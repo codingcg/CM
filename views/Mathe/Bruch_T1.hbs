@@ -41,12 +41,29 @@
             <div class="modal-body">
                 <p><center>
                     <button type="button" class="btn" style="background-color:rgba(175, 57, 57, 0.5)" onclick="closeModal({{@index}})"><i class="bi bi-arrow-clockwise"></i> &nbsp; Nochmal probieren</button>
-                    <button type="button" class="btn" style="background-color:rgba(214, 189, 61, 0.5)" onclick="showHelp({{@index}})"><i class="bi bi-question-diamond"></i> &nbsp;Hilfe</button>
+                    <button type="button" class="btn" style="background-color:rgba(214, 189, 61, 0.5)" onclick="showHelp({{@index}}, 1)"><i class="bi bi-question-diamond"></i> &nbsp;Hilfe</button>
                 </center></p>
             </div>
-            <div class="modal-footer" id="modal-footer{{@index}}" style="display: none">
-                <h3>{{{hint}}}</h3>
+            <div class="modal-footer" id="modal-footer{{@index}}-1" style="display: none">
+                <h3>{{{hint1}}}</h3>
+                {{#ifNotEqual hint2 "Kein Tip verfügbar"}}<button type="button" class="btn" style="background-color:rgba(214, 189, 61, 0.5); border: 1px solid grey" onclick="showHelp({{@index}}, 2)"><i class="bi bi-question-diamond"></i> &nbsp;Noch ein Tip?</button>{{/ifNotEqual}}
             </div>
+            <div class="modal-footer" id="modal-footer{{@index}}-2" style="display: none">
+                <h3>{{{hint2}}}</h3>
+                {{#ifNotEqual hint3 "Kein Tip verfügbar"}}<button type="button" class="btn" style="background-color:rgba(214, 189, 61, 0.5); border: 1px solid grey" onclick="showHelp({{@index}}, 3)"><i class="bi bi-question-diamond"></i> &nbsp;Noch ein Tip?</button>{{/ifNotEqual}}
+            </div>
+            <div class="modal-footer" id="modal-footer{{@index}}-3" style="display: none">
+                <h3>{{{hint3}}}</h3>
+                {{#ifNotEqual hint4 "Kein Tip verfügbar"}}<button type="button" class="btn" style="background-color:rgba(214, 189, 61, 0.5); border: 1px solid grey" onclick="showHelp({{@index}}, 4)"><i class="bi bi-question-diamond"></i> &nbsp;Noch ein Tip?</button>{{/ifNotEqual}}
+            </div>
+            <div class="modal-footer" id="modal-footer{{@index}}-4" style="display: none">
+                <h3>{{{hint4}}}</h3>
+                {{#ifNotEqual hint5 "Kein Tip verfügbar"}}<button type="button" class="btn" style="background-color:rgba(214, 189, 61, 0.5); border: 1px solid grey" onclick="showHelp({{@index}}, 5)"><i class="bi bi-question-diamond"></i> &nbsp;Noch ein Tip?</button>{{/ifNotEqual}}
+            </div>
+            <div class="modal-footer" id="modal-footer{{@index}}-5" style="display: none">
+                <h3>{{{hint5}}}</h3>
+            </div>
+
         </div>
     </div>
     {{/sheetData}}
@@ -64,6 +81,7 @@
     var currentExercise_global = 0;
     var myPoints_global = [];
     var bar = document.getElementById("bar");
+    var tries = 0;
 
     var exDivBoxes = document.getElementsByClassName("exDivBox");
     for (var i = 1; i < exDivBoxes.length; i++) {
@@ -76,12 +94,14 @@
         var checkBtn = document.getElementById('checkBtn' + currentExercise);
         var nextBtn = document.getElementById('nextBtn' + currentExercise);
         currentExercise_global = currentExercise;
+        tries ++;
         $.ajax({
             type: "POST",
             url: "/storeAnswer/" + currentExercise + "/1",
             data: {
                 "answerGiven": input.value.replace(",","."),
                 "currentExercise": currentExercise,
+                "tries": tries,
             },
             success: function(data) {
                 if (data.answerGiven == data.correctSolution) {
@@ -105,6 +125,7 @@
     }
     function nextQuestion(currentExercise) {
         bar.innerHTML = "";
+        tries = 0;      // reset tries for the next exercise
         $.ajax({
             type: "POST",
             url: "/nextQuestion/" + currentExercise + "/1",
@@ -122,7 +143,7 @@
                 });
                 for (var i = 0; i < myPoints_global.length; i++) {
                     if (i < currentExercise_global+1) {
-                        if (myPoints_global[i]) {
+                        if (myPoints_global[i] == 1) {
                             if (i==0) {
                                 bar.innerHTML += "<td class='greenCell' id='first'></td>";
                             } else if (i== myPoints_global.length-1) {
@@ -130,13 +151,21 @@
                             } else {
                                 bar.innerHTML += "<td class='greenCell'></td>";
                             }
-                        } else {
+                        } else if (myPoints_global[i] == 0) {
                             if (i==0) {
                                 bar.innerHTML += "<td class='redCell' id='first'></td>";
                             } else if (i== myPoints_global.length-1) {
                                 bar.innerHTML += "<td class='redCell' id='last'></td>";
                             } else {
                                 bar.innerHTML += "<td class='redCell'></td>";
+                            }
+                        } else {
+                            if (i==0) {
+                                bar.innerHTML += "<td class='orangeCell' id='first'></td>";
+                            } else if (i== myPoints_global.length-1) {
+                                bar.innerHTML += "<td class='orangeCell' id='last'></td>";
+                            } else {
+                                bar.innerHTML += "<td class='orangeCell'></td>";
                             }
                         }
                     } else {
@@ -173,8 +202,8 @@
         modal.focus();
         modalOpen = true;
     }
-    function showHelp(currentExercise) {
-        document.getElementById('modal-footer'+currentExercise).style='inline-block';
+    function showHelp(currentExercise, hintNr) {
+        document.getElementById('modal-footer'+currentExercise+'-'+hintNr).style='inline-block';
         modalOpen = true;
     }
     
