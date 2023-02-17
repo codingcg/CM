@@ -165,13 +165,10 @@ exports.viewall = (req, res) => {
 
 
 
-// show my sheets --> for students here all their sheets are displayed
+// show my sheets --> for students: all their sheets are displayed here
 exports.sheets = (req, res) => {
 
-   // If the user is loggedin
-   if (req.session.loggedin) {
-      
-    //connection.query('SELECT * FROM sheets WHERE username = ?', [req.session.username], (err, rows) => {
+  if (req.session.loggedin) {
     connection.query('SELECT * FROM sheets s, results r, user u WHERE s.sheet_id = r.sheet_id AND r.username = u.username AND u.username = ?', [req.session.username], (err, rows) => {
 
       // When done with the connection, release it
@@ -182,14 +179,11 @@ exports.sheets = (req, res) => {
       } else {
         console.log(err);
       }
-    //console.log('The data output from table: \n', rows);
     });
   } else {
     // Not logged in: please log in to view this page .....
     res.render('login', {layout: 'loginLayout.hbs'});
-    //res.send('Please login to view this page!');
   }
-  
 }
 
 
@@ -314,11 +308,12 @@ exports.storeAnswer = (req, res) => {
   let answerGiven = parseFloat(req.body.answerGiven.replace(",", "."));
   let tries = req.body.tries;
 
-  var number_of_exercises = Object.keys(sheet).length;
-  let points_for_this_exercise = 0;
+  var numberOfExercises = Object.keys(sheet).length;
+  let pointsForThisExercise = 0;
 
   // continue only if the user entered a float number which is in correct format
-  if(/^\d{1,2}(\.\d{0,2})?$|^\.\d\d?$/.test(answerGiven)) {
+  //if(/^\d{1,2}(\.\d{0,2})?$|^\.\d\d?$/.test(answerGiven)) {
+  if(!isNaN(answerGiven) || !isNaN(parseInt(answerGiven))) {
 
       //if an answer was given in the correct format for this exercise
       if (answerGiven) {
@@ -329,18 +324,18 @@ exports.storeAnswer = (req, res) => {
             // given answer is right
             if (correctSolution == answerGiven){
               if (tries == 1){
-                points_for_this_exercise = parseFloat(sheet[currentExercise].points);
+                pointsForThisExercise = parseFloat(sheet[currentExercise].points);
               } else if (tries == 2) {
-                points_for_this_exercise = parseFloat(sheet[currentExercise].points * 0.5);
+                pointsForThisExercise = parseFloat(sheet[currentExercise].points * 0.5);
               } 
             // given answer is wrong
             } else {
-              points_for_this_exercise = 0;
+              pointsForThisExercise = 0;
             }
               
             connection.query('SELECT * FROM results WHERE sheet_id = ? AND username = ?', [req.params.sheet_id, req.session.username], function(error, rows, fields) {
               // reached_points is a global variable -- dangerous maybe?
-              reached_points = parseInt(rows[0].reached_points) + points_for_this_exercise;
+              reached_points = parseInt(rows[0].reached_points) + pointsForThisExercise;
             });
 
             // check if the column exists in the database
@@ -360,11 +355,11 @@ exports.storeAnswer = (req, res) => {
             connection.query('IF NOT EXISTS( SELECT NULL FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = "results" AND COLUMN_NAME = ?) THEN ALTER TABLE results ADD COLUMN ans'+currentExercise+' float(1) NOT NULL DEFAULT 0, ADD COLUMN p'+currentExercise+' float(1) NOT NULL DEFAULT 0; END IF', [tmp]);
 
             // now add the user input to the new or existing column
-            connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ?, number_of_exercises = ? WHERE sheet_id = ? AND username = ?', [answerGiven, points_for_this_exercise, number_of_exercises, req.params.sheet_id, req.session.username]);
+            connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ?, number_of_exercises = ? WHERE sheet_id = ? AND username = ?', [answerGiven, pointsForThisExercise, numberOfExercises, req.params.sheet_id, req.session.username]);
 
             // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
             // but for the send command I need ajax and can use this in js but not in html/handlebars
-            res.send({results, answerGiven, correctSolution, number_of_exercises});
+            res.send({results, answerGiven, correctSolution, numberOfExercises});
           
         });		
       }
