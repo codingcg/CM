@@ -289,9 +289,16 @@ exports.displayOneSheet = (req, res) => {
         // make sheet Variable global and construct a complete clone of sheetData in it to access txt file data it in other routes
         sheet = Object.assign({}, sheetData);
 
-        // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
-        // but for the send command I need ajax and can use this in js but not in html/handlebars
-        res.render(results[0].subject + '/' + results[0].name, {sheetData, sheet});
+        connection.query('SELECT * FROM results WHERE sheet_id = ? AND username = ?', [req.params.sheet_id, req.session.username], (err, rows) => {
+
+            // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
+            // but for the send command I need ajax and can use this in js but not in html/handlebars
+            var reached_points = rows.reached_points;
+
+            console.log(reached_points);
+
+            res.render(results[0].subject + '/' + results[0].name, {sheetData, max_points, reached_points});
+        });
       });
     });
   } else {
@@ -335,7 +342,7 @@ exports.storeAnswer = (req, res) => {
               
             connection.query('SELECT * FROM results WHERE sheet_id = ? AND username = ?', [req.params.sheet_id, req.session.username], function(error, rows, fields) {
               // reached_points is a global variable -- dangerous maybe?
-              reached_points = parseInt(rows[0].reached_points) + pointsForThisExercise;
+              reached_points = parseFloat(rows[0].reached_points) + pointsForThisExercise;
             });
 
             // check if the column exists in the database
@@ -356,6 +363,13 @@ exports.storeAnswer = (req, res) => {
 
             // now add the user input to the new or existing column
             connection.query('UPDATE results SET ans'+currentExercise+' = ?, p'+currentExercise+' = ?, number_of_exercises = ? WHERE sheet_id = ? AND username = ?', [answerGiven, pointsForThisExercise, numberOfExercises, req.params.sheet_id, req.session.username]);
+
+
+            // if this is the last question, mark the sheet as done
+            if (parseInt(currentExercise)+1 == numberOfExercises) {
+              connection.query('UPDATE results SET done = 1 WHERE sheet_id = ? AND username = ?', [req.params.sheet_id, req.session.username]);
+
+            }
 
             // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
             // but for the send command I need ajax and can use this in js but not in html/handlebars

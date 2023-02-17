@@ -22,7 +22,9 @@
     <tr>
       <th scope="row">{{this.sheet_id}}</th>
       <!--<td><a href="/{{this.name}}">{{this.name}}</a></td>-->
-      <td><a href="/displayOneSheet/{{this.sheet_id}}" style="text-decoration: none">{{this.name}}</a></td>
+
+      {{#ifEqual this.done 1}} <td>{{this.name}} &nbsp;&nbsp; Ansehen? </td> {{/ifEqual}}
+      {{#ifEqual this.done 0}} <td><a href="/displayOneSheet/{{this.sheet_id}}" style="text-decoration: none">{{this.name}}</a></td> {{/ifEqual}}
       <td style="font-size: 9pt; vertical-align: middle">{{this.description}}</td>
       <td>{{this.reached_points}} von {{this.max_points}}</td>
     </tr>

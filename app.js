@@ -56,11 +56,11 @@ handlebars.handlebars.registerHelper('contains', function(needle, haystack, opti
 });
 handlebars.handlebars.registerHelper("setVar", function(varName, varValue, options) {
   options.data.root[varName] = varValue;
-});
+});*/
 handlebars.handlebars.registerHelper('concat', function() {
     arguments = [...arguments].slice(0, -1);
     return arguments.join('');
-});*/
+});
 //app.locals.info = 42;
 
 
