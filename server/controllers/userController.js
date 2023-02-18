@@ -291,12 +291,11 @@ exports.displayOneSheet = (req, res) => {
 
         connection.query('SELECT * FROM results WHERE sheet_id = ? AND username = ?', [req.params.sheet_id, req.session.username], (err, rows) => {
 
-            var reached_points = rows[0].reached_points;
-            var percentage =  (reached_points / max_points ) * 100;
-
+            //var reached_points = rows[0].reached_points;
++
             // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
             // but for the send command I need ajax and can use this in js but not in html/handlebars
-            res.render(results[0].subject + '/' + results[0].name, {sheetData, max_points: max_points, reached_points: reached_points, percentage: percentage});
+            res.render(results[0].subject + '/' + results[0].name, {sheetData, /*max_points: max_points, reached_points: reached_points, percentage: percentage*/});
         });
       });
     });
@@ -316,6 +315,7 @@ exports.storeAnswer = (req, res) => {
 
   var numberOfExercises = Object.keys(sheet).length;
   let pointsForThisExercise = 0;
+  let max_points;
 
   // continue only if the user entered a float number which is in correct format
   //if(/^\d{1,2}(\.\d{0,2})?$|^\.\d\d?$/.test(answerGiven)) {
@@ -324,8 +324,14 @@ exports.storeAnswer = (req, res) => {
       //if an answer was given in the correct format for this exercise
       if (answerGiven) {
 
+        connection.query('SELECT * FROM results WHERE sheet_id = ? AND username = ?', [req.params.sheet_id, req.session.username], function(error, rows, fields) {
+          // reached_points is a global variable -- dangerous maybe?
+          reached_points = parseFloat(rows[0].reached_points) + pointsForThisExercise;
+        });
+
         connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], function(error, results, fields) {
             let correctSolution = parseFloat(sheet[currentExercise].solution);
+            max_points = parseFloat(results[0].max_points);
 
             // given answer is right
             if (correctSolution == answerGiven){
@@ -339,10 +345,7 @@ exports.storeAnswer = (req, res) => {
               pointsForThisExercise = 0;
             }
               
-            connection.query('SELECT * FROM results WHERE sheet_id = ? AND username = ?', [req.params.sheet_id, req.session.username], function(error, rows, fields) {
-              // reached_points is a global variable -- dangerous maybe?
-              reached_points = parseFloat(rows[0].reached_points) + pointsForThisExercise;
-            });
+            
 
             // check if the column exists in the database
             /*connection.query('SELECT COUNT(*) AS count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = "results" AND COLUMN_NAME = ?', [tmp], function(error, results, fields) {
@@ -370,9 +373,11 @@ exports.storeAnswer = (req, res) => {
 
             }
 
+            var percentage =  (reached_points / max_points ) * 100;
+
             // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
             // but for the send command I need ajax and can use this in js but not in html/handlebars
-            res.send({results, answerGiven, correctSolution, numberOfExercises});
+            res.send({results, answerGiven, correctSolution, numberOfExercises, max_points, reached_points, percentage});
           
         });		
       }

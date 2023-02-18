@@ -73,24 +73,9 @@
                 <span class="close" onclick="closeFinishModal()">&times;</span>
             </div>
             <div class="modal-body">
-                <p><center>
-                    Du hast {{reached_points}} Punkte von {{max_points}} Punkten erreicht. 
-                    <br><br>
-                    {{percentage}}
-                    {{#ifGreater percentage 33}}
-                        <img src="../images/star.png" width="3%">
-                    {{/ifGreater}}
-                    {{#ifGreater percentage 66}}
-                        <img src="../images/star.png" width="3%">
-                    {{/ifGreater}}
-                    {{#ifGreater percentage 99}}
-                        <img src="../images/star.png" width="3%">
-                    {{/ifGreater}}
-                    <br><br>
-                    <img src="../images/coin.png" width="3%">
-                    <br><br>
-                    <button type="button" class="btn btn-success" onclick="closeFinishModal()"><i class="bi bi-arrow-right-circle"></i> &nbsp; Fertig </button>
-                </center></p>
+                <center><p id="finishModalContent">
+                   
+                </p></center>
             </div>
         </div>
     </div>
@@ -140,6 +125,32 @@
                     entered = true;
 
                     if (currentExercise_global+1 == data.numberOfExercises) {
+
+                        var finishModalContent = document.getElementById('finishModalContent');
+                        finishModalContent.innerHTML += " Du hast " + data.reached_points + " Punkte von " + data.max_points + " Punkten erreicht.<br><br>"; 
+
+                        if (data.percentage > 33) {
+                            finishModalContent.innerHTML += " <img src='../images/star.png' width='3%'>";
+                        }
+                        if (data.percentage > 66) {
+                            finishModalContent.innerHTML += " <img src='../images/star.png' width='3%'>";
+                        }
+                        if (data.percentage > 99) {
+                            finishModalContent.innerHTML += " <img src='../images/star.png' width='3%'>";
+                        }
+                        finishModalContent.innerHTML += "<br><br>";
+                        if (data.percentage > 33) {
+                            finishModalContent.innerHTML += " <img src='../images/coin.png' width='3%'>";
+                        }
+                        if (data.percentage > 66) {
+                            finishModalContent.innerHTML += " <img src='../images/coin.png' width='3%'>";
+                        }
+                        if (data.percentage > 99) {
+                            finishModalContent.innerHTML += " <img src='../images/coin.png' width='3%'>";
+                        }
+                        finishModalContent.innerHTML += "<br><br>";
+                        finishModalContent.innerHTML += "<button type='button' class='btn btn-success' onclick='closeFinishModal()''><i class='bi bi-arrow-right-circle'></i> &nbsp; Fertig </button>";
+
                         nextBtn.innerHTML = "Arbeitsblatt abgeben";
                         nextBtn.setAttribute('onclick','openFinishModal()');
                     }
@@ -226,6 +237,7 @@
         var finishModal = document.getElementById('myFinishModal');
         finishModal.style.display = "block";
         finishModal.focus();
+          
     }
 
     function closeFinishModal() {
