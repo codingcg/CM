@@ -10,3 +10,31 @@ Berechne <br><img src="../images/cake.png" width="40%">
 Notiere die beiden Zahlen untereinander. Addiere dann schriftlich.
 &&&
 Achte darauf das Komma untereinander zu notieren. Füge 0,5 eine gedachte Null hinzu.
+***************
+Berechne
+&&&
+0,4 * 0,4 =
+&&&
+0,16
+&&&
+1
+&&&
+Multipliziere zunächst schriftlich ohne Komma. Füge dann die Nachkommastellen im Ergebnis hinzu.
+In der Aufgabe sind zwei Nachkommastellen insgesammt enthalten. Das bedeutet dein Ergebnis enthält auch zwei Nachkommastellen.
+***************
+Trage die Dezimalzahl ein.
+&&&
+1 
+<div class="frac">
+    <span> 1 </span>
+    <span class="s"> / </span>
+    <span class="bo"> 2 </span>
+</div> = 
+&&&
+1,5
+&&&
+1
+&&&
+Stelle dir drei ganze und einen halben Kuchen vor. 
+&&&
+Ein halber Kuchen entspricht 0,5 Kuchen.

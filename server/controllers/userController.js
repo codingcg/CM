@@ -291,13 +291,12 @@ exports.displayOneSheet = (req, res) => {
 
         connection.query('SELECT * FROM results WHERE sheet_id = ? AND username = ?', [req.params.sheet_id, req.session.username], (err, rows) => {
 
+            var reached_points = rows[0].reached_points;
+            var percentage =  (reached_points / max_points ) * 100;
+
             // I can use handlebars {{{}}}-notation in HTML with all the info that is given with the render command,
             // but for the send command I need ajax and can use this in js but not in html/handlebars
-            var reached_points = rows.reached_points;
-
-            console.log(reached_points);
-
-            res.render(results[0].subject + '/' + results[0].name, {sheetData, max_points, reached_points});
+            res.render(results[0].subject + '/' + results[0].name, {sheetData, max_points: max_points, reached_points: reached_points, percentage: percentage});
         });
       });
     });

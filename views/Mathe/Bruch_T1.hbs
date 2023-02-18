@@ -61,12 +61,12 @@
 
         </div>
     </div>
+    {{/sheetData}}
 
 
 
     <!-- The Finish Modal -->
     <div id="myFinishModal" class="modal">
-
         <div class="modal-content">
             <div class="modal-header" style="background-color: rgba(66, 129, 66, 0.5) !important">
                 <h2>Tolle Arbeit</h2>
@@ -76,16 +76,24 @@
                 <p><center>
                     Du hast {{reached_points}} Punkte von {{max_points}} Punkten erreicht. 
                     <br><br>
-                    <img src="../images/star.png" width="10%">
+                    {{percentage}}
+                    {{#ifGreater percentage 33}}
+                        <img src="../images/star.png" width="3%">
+                    {{/ifGreater}}
+                    {{#ifGreater percentage 66}}
+                        <img src="../images/star.png" width="3%">
+                    {{/ifGreater}}
+                    {{#ifGreater percentage 99}}
+                        <img src="../images/star.png" width="3%">
+                    {{/ifGreater}}
                     <br><br>
-                    <img src="../images/coin.png" width="10%">
+                    <img src="../images/coin.png" width="3%">
                     <br><br>
                     <button type="button" class="btn btn-success" onclick="closeFinishModal()"><i class="bi bi-arrow-right-circle"></i> &nbsp; Fertig </button>
                 </center></p>
             </div>
         </div>
     </div>
-    {{/sheetData}}
 </div>
 
 
