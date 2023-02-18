@@ -9,7 +9,7 @@
 
 <table class="table table-bordered">
   <thead class="thead-dark">
-    <tr>
+    <tr style="background-color: rgba(128, 128, 155, 0.263)">
       <th scope="col">Nr.</th>
       <th scope="col">Name </th>
       <th scope="col">Beschreibung</th>
@@ -19,15 +19,25 @@
   <tbody>
 
     {{#each rows}}
-    <tr>
-      <th scope="row">{{this.sheet_id}}</th>
-      <!--<td><a href="/{{this.name}}">{{this.name}}</a></td>-->
 
-      {{#ifEqual this.done 1}} <td>{{this.name}} &nbsp;&nbsp; Ansehen? </td> {{/ifEqual}}
-      {{#ifEqual this.done 0}} <td><a href="/displayOneSheet/{{this.sheet_id}}" style="text-decoration: none">{{this.name}}</a></td> {{/ifEqual}}
-      <td style="font-size: 9pt; vertical-align: middle">{{this.description}}</td>
-      <td>{{this.reached_points}} von {{this.max_points}}</td>
-    </tr>
+      {{#ifEqual this.done 1}}
+      <tr style="background-color: rgba(91, 91, 186, 0.263)">
+        <th scope="row">{{this.sheet_id}}</th>
+        <td>{{this.name}} &nbsp;&nbsp; Ansehen? </td>
+        <td style="font-size: 9pt; vertical-align: middle">{{this.description}}</td>
+        <td>{{this.reached_points}} von {{this.max_points}}</td>
+      </tr>
+      {{/ifEqual}}
+
+      {{#ifEqual this.done 1}}
+      <tr style="background-color: rgba(182, 196, 54, 0.157)">
+        <th scope="row">{{this.sheet_id}}</th>
+        <td><a href="/displayOneSheet/{{this.sheet_id}}" style="text-decoration: none">{{this.name}}</a></td>
+        <td style="font-size: 9pt; vertical-align: middle">{{this.description}}</td>
+        <td>{{this.reached_points}} von {{this.max_points}}</td>
+      </tr>
+      {{/ifEqual}}
+
     {{/each}}
 
   </tbody>

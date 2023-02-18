@@ -18,7 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); 
 
 // Static Files
-app.use(express.static('/public'));
+//app.use(express.static('/public'));
+app.use(express.static('public'));
 
 
 // Templating Engine

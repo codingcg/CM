@@ -1,0 +1,107 @@
+Berechne <br><img src="../images/cake.png" width="40%">
+
+&&&
+0,5 + 0,25 = 
+&&&
+0,75
+&&&
+1
+&&&
+Notiere die beiden Zahlen untereinander. Addiere dann schriftlich.
+&&&
+Achte darauf das Komma untereinander zu notieren. Füge 0,5 eine gedachte Null hinzu.
+***************
+Berechne
+&&&
+0,4 * 0,4 =
+&&&
+0,16
+&&&
+1
+&&&
+Multipliziere zunächst schriftlich ohne Komma. Füge dann die Nachkommastellen im Ergebnis hinzu.
+In der Aufgabe sind zwei Nachkommastellen insgesammt enthalten. Das bedeutet dein Ergebnis enthält auch zwei Nachkommastellen.
+***************
+Trage die Dezimalzahl ein.
+&&&
+1 
+<div class="frac">
+    <span> 1 </span>
+    <span class="s"> / </span>
+    <span class="bo"> 2 </span>
+</div> = 
+&&&
+1,5
+&&&
+1
+&&&
+Stelle dir drei ganze und einen halben Kuchen vor. 
+&&&
+Ein halber Kuchen entspricht 0,5 Kuchen.
+***************
+Trage die Dezimalzahl ein.
+&&&
+3 
+<div class="frac">
+    <span> 4 </span>
+    <span class="s"> / </span>
+    <span class="bo"> 5 </span>
+</div> = 
+&&&
+3,8
+&&&
+1
+&&&
+Stelle dir drei ganze und vier fünftel eines Kuchen vor. 
+&&&
+Erweitere auf die nächste Stufenzahl.
+&&&
+Die nächste Stufenzahl ist 10. Um vier fünftel auf 10 im Nenner zu erweitern multiplizieren wir Zähler und Nenner jeweils mit zwei.
+&&&
+Der erweiterte Bruch sind acht zehntel.
+&&&
+Acht Zehnttel sind 0,8 als Dezimalzahl, da die zehn eine Null enthält, wir also eine Nachkommastelle benötigen.
+***************
+Berechne
+&&&
+0,5 + 
+<div class="frac">
+    <span> 1 </span>
+    <span class="s"> / </span>
+    <span class="bo"> 2 </span>
+</div> = 
+&&&
+1
+&&&
+1
+&&&
+Überlege wie ein halber Kuchen als Dezimalzahl aussieht.
+&&&
+Ein halb entspricht der Dezimalzahl 0,5.
+***************
+Berechne
+&&&
+1,25 + 
+<div class="frac">
+    <span> 1 </span>
+    <span class="s"> / </span>
+    <span class="bo"> 4 </span>
+</div> = 
+&&&
+1,5
+&&&
+1
+&&&
+Überlege wie ein viertel Kuchen als Dezimalzahl aussieht.
+&&&
+Erweitere ein viertel auf die nächste Stufenzahl.
+&&&
+Die nächste Stufenzahl ist 100 (10 geht nicht, da 10 nicht durch 4 teilbar ist).
+&&&
+Erweitere den Bruch mit 25 um eine 100 im Nenner zu erhalten.
+&&&
+Der erweiterte Bruch ist fünfundzwanzig hundertstel.
+&&&
+Das ergibt die Dezimalzahl 0,25 (da die 100 zwei Nullen enthält benötigen wir im Ergebnis zwei Nachkommastellen).
+&&&
+Addiere 1,25 und 0,25 schriftlich.
