@@ -163,6 +163,7 @@
     function nextQuestion(currentExercise) {
         bar.innerHTML = "";
         tries = 0;      // reset tries for the next exercise
+        let numberOfExercises = 0;
         $.ajax({
             type: "POST",
             url: "/nextQuestion/" + currentExercise + "/1",
@@ -171,17 +172,18 @@
             },
             success: function(data) {                
                 myPoints_global = [];
+                numberOfExercises = data.numberOfExercises;
                 $.each(data.results[0], function(index, element) {
                     if(/^[p]/.test(index)) {
                         myPoints_global.push(element);
                     }
                 });
-                for (var i = 0; i < myPoints_global.length; i++) {
+                for (var i = 0; i < numberOfExercises; i++) {
                     if (i < currentExercise_global+1) {
                         if (myPoints_global[i] == 1) {
                             if (i==0) {
                                 bar.innerHTML += "<td class='greenCell' id='first'></td>";
-                            } else if (i== myPoints_global.length-1) {
+                            } else if (i== numberOfExercises-1) {
                                 bar.innerHTML += "<td class='greenCell' id='last'></td>";
                             } else {
                                 bar.innerHTML += "<td class='greenCell'></td>";
@@ -189,7 +191,7 @@
                         } else if (myPoints_global[i] == 0) {
                             if (i==0) {
                                 bar.innerHTML += "<td class='redCell' id='first'></td>";
-                            } else if (i== myPoints_global.length-1) {
+                            } else if (i== numberOfExercises-1) {
                                 bar.innerHTML += "<td class='redCell' id='last'></td>";
                             } else {
                                 bar.innerHTML += "<td class='redCell'></td>";
@@ -197,7 +199,7 @@
                         } else {
                             if (i==0) {
                                 bar.innerHTML += "<td class='orangeCell' id='first'></td>";
-                            } else if (i== myPoints_global.length-1) {
+                            } else if (i== numberOfExercises-1) {
                                 bar.innerHTML += "<td class='orangeCell' id='last'></td>";
                             } else {
                                 bar.innerHTML += "<td class='orangeCell'></td>";
@@ -206,7 +208,7 @@
                     } else {
                         if (i==0) {
                                 bar.innerHTML += "<td class='greyCell' id='first'></td>";
-                            } else if (i== myPoints_global.length-1) {
+                            } else if (i== numberOfExercises-1) {
                                 bar.innerHTML += "<td class='greyCell' id='last'></td>";
                             } else {
                                 bar.innerHTML += "<td class='greyCell'></td>";

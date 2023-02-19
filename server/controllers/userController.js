@@ -329,6 +329,7 @@ exports.storeAnswer = (req, res) => {
           reached_points = parseFloat(rows[0].reached_points) + pointsForThisExercise;
         });
 
+
         connection.query('SELECT * FROM sheets WHERE sheet_id = ?', [req.params.sheet_id], function(error, results, fields) {
             let correctSolution = parseFloat(sheet[currentExercise].solution);
             max_points = parseFloat(results[0].max_points);
