@@ -1,4 +1,4 @@
-Berechne <br><img src="../images/cake.png" width="40%">
+Berechne  <img src="../images/basicCalc.png" width="5%"><br>
 
 &&&
 0,5 + 0,25 = 
